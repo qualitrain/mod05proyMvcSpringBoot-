@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProbadorIGestorBD implements CommandLineRunner {
-    private static Logger log = LoggerFactory.getLogger(ProbadorIGestorBD.class); ;
+    private static Logger log = LoggerFactory.getLogger(ProbadorIGestorBD.class);
 
     public ProbadorIGestorBD() {
         log.info("Se invocó al constructor de ProbadorIGestorBD");
@@ -20,6 +20,7 @@ public class ProbadorIGestorBD implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        log.info("Corriendo en el Hilo {}", Thread.currentThread().toString());
         this.saludar();
     }
 }
