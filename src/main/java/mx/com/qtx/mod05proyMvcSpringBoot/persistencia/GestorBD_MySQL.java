@@ -2,8 +2,10 @@ package mx.com.qtx.mod05proyMvcSpringBoot.persistencia;
 
 import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorBD;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -11,13 +13,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class GestorBD_MySQL implements IGestorBD {
     private static Logger log = LoggerFactory.getLogger(GestorBD_MySQL.class); ;
     private final DataSource ds;
+    private final ILogPersona logP;
 
-    public GestorBD_MySQL(DataSource ds) {
+    public GestorBD_MySQL(DataSource ds, ILogPersona logP) {
         log.debug("GestorBD_MySQL.GestorBD_MySQL");
+        this.logP = logP;
         this.ds = ds;
     }
 
@@ -161,11 +165,14 @@ public class GestorBD_MySQL implements IGestorBD {
                         Date fechaNacimiento = rs.getDate("fecha_nacimiento");
                         String nombre = rs.getString("nombre");
                         String direccion = rs.getString("direccion");
-
-                        return new Persona(id,nombre,direccion,fechaNacimiento.toLocalDate());
+                        Persona p = new Persona(id,nombre,direccion,fechaNacimiento.toLocalDate());
+                        this.logP.guardarOperacion("LECTURA_X_ID", p);
+                        return p;
                     }
-                    else
+                    else {
+                        this.logP.guardarOperacion("LECTURA_FALLIDA_X_ID", new Persona(id,null,null,null));
                         return null;
+                    }
                 }
             }
         }
