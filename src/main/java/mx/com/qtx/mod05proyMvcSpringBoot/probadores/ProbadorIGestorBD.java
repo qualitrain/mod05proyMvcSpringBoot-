@@ -1,5 +1,6 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.probadores;
 
+import jakarta.annotation.PostConstruct;
 import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
 import mx.com.qtx.mod05proyMvcSpringBoot.persistencia.GestorBD_MySQL;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorBD;
@@ -24,6 +25,11 @@ public class ProbadorIGestorBD implements CommandLineRunner {
         this.gestorBD = gestorBD;
     }
 
+    @PostConstruct
+    public void reportarFinConstruccionBean(){
+        log.info("Spring ha terminado de construir este bean " + this.hashCode());
+    }
+
     public void saludar(){
         log.info("Hola a todos. Ha quedado registrada esta entrada histórica");
     }
@@ -33,7 +39,7 @@ public class ProbadorIGestorBD implements CommandLineRunner {
         log.info("Corriendo en el Hilo {}", Thread.currentThread().toString());
         this.saludar();
         for(int i = 1; i<15; i++) {
-            Persona perI = this.gestorBD.leerPersonaXID(i);
+            Persona perI = this.gestorBD.leerPersonaXID(this.getIdAleatorio());
             if(perI != null)
                 log.info("Se ha leído a la persona con id = 1 " + perI.toString());
             else{
@@ -42,5 +48,9 @@ public class ProbadorIGestorBD implements CommandLineRunner {
         }
         List<Integer> folios = auditorPersona.getFolios();
         folios.forEach(folioI->this.auditorPersona.consultarOperacion(folioI));
+    }
+
+    public int getIdAleatorio(){
+        return (((int)(Math.random() * 15000))%10 ) + 1;
     }
 }
