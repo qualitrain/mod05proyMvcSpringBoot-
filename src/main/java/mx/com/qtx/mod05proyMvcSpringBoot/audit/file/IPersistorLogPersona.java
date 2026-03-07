@@ -1,6 +1,5 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.audit;
+package mx.com.qtx.mod05proyMvcSpringBoot.audit.file;
 
-import mx.com.qtx.mod05proyMvcSpringBoot.audit.file.AuditorOperPersonaFile;
 import org.slf4j.Logger;
 
 import java.util.List;

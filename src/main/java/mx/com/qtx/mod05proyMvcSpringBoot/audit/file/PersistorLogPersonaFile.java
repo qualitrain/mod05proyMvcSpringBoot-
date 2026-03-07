@@ -1,6 +1,5 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.audit.file;
 
-import mx.com.qtx.mod05proyMvcSpringBoot.audit.IPersistorLogPersona;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,6 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.audit.file;
 
 import jakarta.annotation.PreDestroy;
-import mx.com.qtx.mod05proyMvcSpringBoot.audit.IPersistorLogPersona;
 import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
