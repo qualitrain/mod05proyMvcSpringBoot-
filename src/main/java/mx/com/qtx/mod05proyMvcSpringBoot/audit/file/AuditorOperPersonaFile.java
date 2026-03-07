@@ -50,7 +50,6 @@ public class AuditorOperPersonaFile implements ILogPersona {
     @PreDestroy
     private void salvarOperaciones() {
         this.persistorLog.guardarOperaciones(log,operaciones);
-
     }
 
     public record Operacion(int id,String tipo) {
