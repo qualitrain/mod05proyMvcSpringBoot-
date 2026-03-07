@@ -1,6 +1,7 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.audit;
+package mx.com.qtx.mod05proyMvcSpringBoot.audit.file;
 
 import jakarta.annotation.PreDestroy;
+import mx.com.qtx.mod05proyMvcSpringBoot.audit.IPersistorLogPersona;
 import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
@@ -8,11 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +16,12 @@ import java.util.List;
 @Primary
 public class AuditorOperPersonaFile implements ILogPersona {
     private static Logger log = LoggerFactory.getLogger(AuditorOperPersonaFile.class);
+    private final IPersistorLogPersona persistorLog;
     List<Operacion> operaciones =new ArrayList<>();
 
-    public AuditorOperPersonaFile() {
+    public AuditorOperPersonaFile(IPersistorLogPersona persistorLog) {
         log.info("Se ha instanciado a " + this.getClass().getName());
+        this.persistorLog = persistorLog;
     }
 
     @Override
@@ -38,7 +36,7 @@ public class AuditorOperPersonaFile implements ILogPersona {
             log.info("No hay operacion registrada con el folio " + folio);
         }
         Operacion operI = this.operaciones.get(folio - 1);
-        log.info("Folio:{}, Tipo:{}, IdPersona:{}",folio, operI.tipo, operI.id);
+        log.info("Folio:{}, Tipo:{}, IdPersona:{}",folio, operI.tipo(), operI.id());
     }
 
     @Override
@@ -51,29 +49,10 @@ public class AuditorOperPersonaFile implements ILogPersona {
 
     @PreDestroy
     private void salvarOperaciones() {
-        log.info("Salvando log de operaciones...");
-        final String nombreArchivo = generarNombreArchivo();
+        this.persistorLog.guardarOperaciones(log,operaciones);
 
-        try (PrintWriter writer = new PrintWriter(new FileWriter(nombreArchivo))) {
-            for (int i = 0; i < operaciones.size(); i++) {
-                Operacion op = operaciones.get(i);
-                int folio = i + 1; // El folio es el índice + 1
-                writer.printf("Folio:%5d, Id:%5d, Tipo:%s%n", folio, op.id, op.tipo);
-            }
-            log.info("Operaciones guardadas en archivo: " + nombreArchivo);
-        }
-        catch (IOException e) {
-            log.error("Error al guardar operaciones: " + e.getMessage(), e);
-        }
     }
 
-    private static String generarNombreArchivo() {
-        LocalDateTime ahora = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
-        String timestamp = ahora.format(formatter);
-        String nombreArchivo = "operaciones_" + timestamp + ".txt";
-        return nombreArchivo;
+    public record Operacion(int id,String tipo) {
     }
-
-    private record Operacion(int id,String tipo){};
 }
