@@ -1,11 +1,13 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.audit.file;
 
 import jakarta.annotation.PostConstruct;
+import mx.com.qtx.mod05proyMvcSpringBoot.audit.AuditUtil;
 import mx.com.qtx.mod05proyMvcSpringBoot.audit.AuditorOperPersona;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -18,11 +20,12 @@ public class ConfiguracionLogPersona {
     private static final String PROP_FORMATO_LOG_PERSONA = "qtx.com.logpersona.formato";
     private static final String PROP_TIPO_LOG_PERSONA = "qtx.com.logpersona.tipo";
 
-    private final Environment env;
+    @Autowired
+    private Environment env;
 
-    public ConfiguracionLogPersona(Environment env) {
-        this.env = env;
-    }
+//    public ConfiguracionLogPersona(Environment env) {
+//        this.env = env;
+//    }
 
     @PostConstruct
     public void checarConfiguracion(){
@@ -31,7 +34,10 @@ public class ConfiguracionLogPersona {
         log.info("{} = {}", propBuscada,valorFormatoLogpersona);
         propBuscada = PROP_TIPO_LOG_PERSONA;
         valorFormatoLogpersona = this.env.getProperty(propBuscada);
-        log.info("{} = {}", propBuscada,valorFormatoLogpersona);    }
+        log.info("{} = {}", propBuscada,valorFormatoLogpersona);
+
+        AuditUtil.explorarEnvironment(this.env);
+    }
 
     @Bean
     public IPersistorLogPersona getIPersistorLogPersona(){
