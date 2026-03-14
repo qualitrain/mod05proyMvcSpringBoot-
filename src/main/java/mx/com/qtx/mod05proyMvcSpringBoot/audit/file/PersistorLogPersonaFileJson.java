@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 //@Primary
-//@Component
+@Component
 public class PersistorLogPersonaFileJson extends PersistorLogPersonaFile {
     @Override
     public void guardarOperaciones(Logger log, List<AuditorOperPersonaFile.Operacion> operaciones) {

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-//@Component
+@Component
 public class AuditorOperPersona implements ILogPersona {
     private static Logger log = LoggerFactory.getLogger(AuditorOperPersona.class);
     private Map<Integer,Operacion>  mapOperaciones = new TreeMap<>();

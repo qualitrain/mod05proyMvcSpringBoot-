@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-//@Component
+@Component
 public class PersistorLogPersonaFile implements IPersistorLogPersona {
 
     public void guardarOperaciones(Logger log, List<AuditorOperPersonaFile.Operacion> operaciones) {

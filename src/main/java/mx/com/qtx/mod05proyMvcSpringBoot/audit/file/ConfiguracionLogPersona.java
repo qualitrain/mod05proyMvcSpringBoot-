@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class ConfiguracionLogPersona {
         AuditUtil.explorarEnvironment(this.env);
     }
 
+    @Primary
     @Bean
     public IPersistorLogPersona getIPersistorLogPersona(){
         log.info("creando bean IPersistorLogPersona");
@@ -60,6 +62,7 @@ public class ConfiguracionLogPersona {
         }
     }
 
+    @Primary
     @Bean
     public ILogPersona getILogPersona(IPersistorLogPersona persistorLogPersona){
         log.info("creando bean ILogPersona");

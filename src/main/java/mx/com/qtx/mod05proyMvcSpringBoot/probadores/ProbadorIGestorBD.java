@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+//@Component
 public class ProbadorIGestorBD implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(ProbadorIGestorBD.class);
 
