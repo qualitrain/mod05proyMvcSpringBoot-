@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Component
 //@Primary
 public class AuditorOperPersonaFile implements ILogPersona {
     private static Logger log = LoggerFactory.getLogger(AuditorOperPersonaFile.class);

@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
 
 import java.util.List;
 
-@Configuration
+//@Configuration
 public class ConfiguracionLogPersona {
     private static Logger log = LoggerFactory.getLogger(ConfiguracionLogPersona.class);
     private static final String PROP_FORMATO_LOG_PERSONA = "qtx.com.logpersona.formato";

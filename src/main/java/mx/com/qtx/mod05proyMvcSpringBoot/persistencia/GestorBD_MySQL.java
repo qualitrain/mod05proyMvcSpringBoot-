@@ -17,11 +17,11 @@ import java.util.List;
 public class GestorBD_MySQL implements IGestorBD {
     private static Logger log = LoggerFactory.getLogger(GestorBD_MySQL.class); ;
     private final DataSource ds;
-    private final ILogPersona logP;
+//    private final ILogPersona logP;
 
-    public GestorBD_MySQL(DataSource ds, ILogPersona logP) {
+    public GestorBD_MySQL(DataSource ds) {
         log.debug("GestorBD_MySQL.GestorBD_MySQL");
-        this.logP = logP;
+ //       this.logP = logP;
         this.ds = ds;
     }
 
@@ -166,11 +166,11 @@ public class GestorBD_MySQL implements IGestorBD {
                         String nombre = rs.getString("nombre");
                         String direccion = rs.getString("direccion");
                         Persona p = new Persona(id,nombre,direccion,fechaNacimiento.toLocalDate());
-                        this.logP.guardarOperacion("LECTURA_X_ID", p);
+//                        this.logP.guardarOperacion("LECTURA_X_ID", p);
                         return p;
                     }
                     else {
-                        this.logP.guardarOperacion("LECTURA_FALLIDA_X_ID", new Persona(id,null,null,null));
+//                        this.logP.guardarOperacion("LECTURA_FALLIDA_X_ID", new Persona(id,null,null,null));
                         return null;
                     }
                 }
