@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+//@Component
 public class ProbadorServicioVentas implements CommandLineRunner {
     final private Logger log = LoggerFactory.getLogger(ProbadorServicioVentas.class);
 
