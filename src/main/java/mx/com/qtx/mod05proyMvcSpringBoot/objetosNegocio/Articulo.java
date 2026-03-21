@@ -5,4 +5,36 @@ public class Articulo {
     private String descripcion;
     private float costoProv1;
     private float precioLista;
+
+    public String getCveArticulo() {
+        return cveArticulo;
+    }
+
+    public void setCveArticulo(String cveArticulo) {
+        this.cveArticulo = cveArticulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public float getCostoProv1() {
+        return costoProv1;
+    }
+
+    public void setCostoProv1(float costoProv1) {
+        this.costoProv1 = costoProv1;
+    }
+
+    public float getPrecioLista() {
+        return precioLista;
+    }
+
+    public void setPrecioLista(float precioLista) {
+        this.precioLista = precioLista;
+    }
 }

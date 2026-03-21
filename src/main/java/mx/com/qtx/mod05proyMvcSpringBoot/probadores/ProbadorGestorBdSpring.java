@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.util.List;
 
-@Component
+//@Component
 public class ProbadorGestorBdSpring implements CommandLineRunner {
     private static Logger log = LoggerFactory.getLogger(ProbadorGestorBdSpring.class);
 
