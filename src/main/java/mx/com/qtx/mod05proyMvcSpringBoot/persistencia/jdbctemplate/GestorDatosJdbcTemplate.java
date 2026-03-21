@@ -8,8 +8,12 @@ import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorDatosSpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -93,4 +97,62 @@ public class GestorDatosJdbcTemplate implements IGestorDatosSpring {
         return jdbcTemplate.query(sql, new ConsultadorDatosGenerico() );
 
     }
+
+    @Override
+    public VentaDTO insertarVenta(VentaDTO vta){
+        String sql = "INSERT into venta (fecha_venta, id_persona_cte, id_persona_vendedor) values (?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int nRows = this.jdbcTemplate.update(
+                con->{
+                    PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setObject(1,vta.getFechaVenta());
+                    ps.setInt(2,vta.getIdPersonaCte());
+                    ps.setInt(3,vta.getIdPersonaVendedor());
+                    return ps;
+                }, keyHolder
+        );
+        if(nRows == 0)
+            return null;
+
+        Number key = keyHolder.getKey();
+        if(key == null)
+            return null;
+
+        vta.setNumVenta(keyHolder.getKey().intValue());
+        return vta;
+
+    }
+
+    @Override
+    public int insertarDetalleVenta(DetalleVentaDTO detVta){
+        final String sql = "INSERT INTO detalle_venta (num_venta, num_detalle, cantidad, cve_articulo, precio_unitario) "
+                +          "VALUES (?, ?, ?, ?, ?);";
+        return this.jdbcTemplate.update(sql, detVta.getNumVenta(), detVta.getNumDetalle(), detVta.getCantidad(),
+                                             detVta.getCveArticulo(), detVta.getPrecioUnitario());
+    }
+
+    @Override
+    public int insertarPersona(PersonaDTO persona) {
+        if(personaInvalida(persona)){
+            throw new IllegalArgumentException("registro de persona inválido " +  persona);
+        }
+        final String cadSQL ="INSERT INTO persona (id_persona, nombre, direccion, fecha_nacimiento) " +
+                "VALUES (?, ?, ?, ?);";
+
+        return  this.jdbcTemplate.update(cadSQL, persona.getIdPersona(), persona.getNombre(), persona.getDireccion(),
+                persona.getFechaNacimiento());
+    }
+
+    private boolean personaInvalida(PersonaDTO persona) {
+        if(persona.getIdPersona() < 0)
+            return true;
+        if(persona.getNombre() == null)
+            return true;
+        if(persona.getDireccion() == null)
+            return true;
+        if(persona.getFechaNacimiento() == null)
+            return true;
+        return false;
+    }
+
 }

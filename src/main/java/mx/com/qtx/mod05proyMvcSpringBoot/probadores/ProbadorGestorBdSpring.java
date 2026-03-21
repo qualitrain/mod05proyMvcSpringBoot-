@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -23,16 +24,27 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        probar_leerPersonaXID(5);
-        probar_leerVentaXID(40);
-        probar_leerDetallesVenta(40);
-        probar_leerArticuloXID("A-23");
-        String consultaSql = """
-                select * from venta vta
-                join detalle_venta det on vta.num_venta = det.num_venta
-                where vta.num_venta < 15;
-                """;
-        probar_exportarDatos(consultaSql);
+        try {
+            /*
+            probar_leerPersonaXID(5);
+            probar_leerVentaXID(40);
+            probar_leerDetallesVenta(40);
+            probar_leerArticuloXID("A-23");
+            String consultaSql = """
+                    select * from venta vta
+                    join detalle_venta det on vta.num_venta = det.num_venta
+                    where vta.num_venta < 15;
+                    """;
+            probar_exportarDatos(consultaSql);
+            probar_insertarDetalleVenta();
+             */
+            probar_insertarDetalleVenta_artNoExiste();
+
+        }
+        catch (Exception ex){
+            log.error("{}:{}",ex.getClass().getName(),ex.getMessage());
+        }
+
     }
 
     private void probar_exportarDatos(String sql) {
@@ -83,4 +95,53 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
         }
     }
 
+    private void probar_insertarVenta(){
+        VentaDTO vta = new VentaDTO();
+        vta.setFechaVenta(LocalDate.now());
+        vta.setIdPersonaCte(5);
+        vta.setIdPersonaVendedor(1);
+
+        VentaDTO vtaInsertada = gestorBD.insertarVenta(vta);
+        log.info("Vta insertada: {}", vtaInsertada.toString());
+    }
+
+    private void probar_insertarDetalleVenta(){
+        DetalleVentaDTO detVta = new DetalleVentaDTO();
+        detVta.setNumVenta(54);
+        detVta.setNumDetalle(2);
+        detVta.setCveArticulo("A-23");
+        detVta.setCantidad(5);
+        detVta.setPrecioUnitario(530.00f);
+
+        int nRows = this.gestorBD.insertarDetalleVenta(detVta);
+        if(nRows > 0){
+            log.info("Detalle insertado {}",detVta.toString());
+        }
+    }
+
+    private void probar_insertarDetalleVenta_artNoExiste(){
+        DetalleVentaDTO detVta = new DetalleVentaDTO();
+        detVta.setNumVenta(54);
+        detVta.setNumDetalle(3);
+        detVta.setCveArticulo("1-1000");
+        detVta.setCantidad(1);
+        detVta.setPrecioUnitario(670.00f);
+
+        int nRows = this.gestorBD.insertarDetalleVenta(detVta);
+        if(nRows > 0){
+            log.info("Detalle insertado {}",detVta.toString());
+        }
+    }
+
+    private void probar_insertarPersona() {
+        PersonaDTO p = new PersonaDTO();
+        p.setIdPersona(102);
+        p.setFechaNacimiento(LocalDate.of(2003,2,14));
+        p.setDireccion("Av. Emiliano Zapata 201, col. Narvarte");
+        p.setNombre("Mariana Lora Morral");
+        if(this.gestorBD.insertarPersona(p) > 0)
+            log.info("persona insertada: {}",p.toString());
+        else
+            log.info("insercion rechazada: {}", p.toString());
+    }
 }
