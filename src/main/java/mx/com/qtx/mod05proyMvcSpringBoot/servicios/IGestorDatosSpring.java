@@ -12,4 +12,5 @@ public interface IGestorDatosSpring {
     VentaDTO leerVentaXID(int numVta);
     List<DetalleVentaDTO> leerDetallesVenta(int numVta);
     ArticuloDTO leerArticuloXID(String cveArt);
+    Integer exportarDatos(String sql);
 }

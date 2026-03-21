@@ -88,4 +88,9 @@ public class GestorDatosJdbcTemplate implements IGestorDatosSpring {
             return null;
         }
     }
+
+    public Integer exportarDatos(String sql){
+        return jdbcTemplate.query(sql, new ConsultadorDatosGenerico() );
+
+    }
 }

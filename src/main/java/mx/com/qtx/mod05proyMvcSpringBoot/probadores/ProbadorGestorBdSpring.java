@@ -27,6 +27,18 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
         probar_leerVentaXID(40);
         probar_leerDetallesVenta(40);
         probar_leerArticuloXID("A-23");
+        String consultaSql = """
+                select * from venta vta
+                join detalle_venta det on vta.num_venta = det.num_venta
+                where vta.num_venta < 15;
+                """;
+        probar_exportarDatos(consultaSql);
+    }
+
+    private void probar_exportarDatos(String sql) {
+        Integer nRegistros = gestorBD.exportarDatos(sql);
+        log.info("ha procesado {] registros", nRegistros);
+
     }
 
     private void probar_leerArticuloXID(String cveArt) {
