@@ -1,8 +1,7 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.persistencia;
 
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorBD;
-import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -54,9 +53,9 @@ public class GestorBD_MySQL implements IGestorBD {
     }
 
     @Override
-    public List<Persona> getPersonasTodas() throws SQLException {
+    public List<PersonaDTO> getPersonasTodas() throws SQLException {
         final String cadSQL = "SELECT id_persona, nombre, direccion, fecha_nacimiento FROM persona;";
-        List<Persona> lstPersonas = new ArrayList<>();
+        List<PersonaDTO> lstPersonas = new ArrayList<>();
 
         try(Connection con = this.getConexionBD()){
             try(Statement st = con.createStatement()){
@@ -68,7 +67,7 @@ public class GestorBD_MySQL implements IGestorBD {
                         Date fechaNac = rs.getDate("fecha_nacimiento");
                         String dir = rs.getString("direccion");
 
-                        lstPersonas.add(new Persona(id,nombre,dir,fechaNac.toLocalDate()));
+                        lstPersonas.add(new PersonaDTO(id,nombre,dir,fechaNac.toLocalDate()));
                      }
                 }
             }
@@ -76,7 +75,7 @@ public class GestorBD_MySQL implements IGestorBD {
         return lstPersonas;
     }
 
-    public List<Persona> getPersonasNacidasEntre(LocalDate fecInf, LocalDate fecSup) throws SQLException {
+    public List<PersonaDTO> getPersonasNacidasEntre(LocalDate fecInf, LocalDate fecSup) throws SQLException {
         if (fecInf == null)
             throw new IllegalArgumentException("Fecha Inferior no puede ser nula");
         if (fecSup ==null)
@@ -86,7 +85,7 @@ public class GestorBD_MySQL implements IGestorBD {
 
         final String cadSQL = "SELECT id_persona, nombre, direccion, fecha_nacimiento FROM persona " +
                               "WHERE fecha_nacimiento between ? and ?;";
-        List<Persona> lstPersonas = new ArrayList<>();
+        List<PersonaDTO> lstPersonas = new ArrayList<>();
 
         try(Connection con = this.getConexionBD()){
             try(PreparedStatement pst = con.prepareStatement(cadSQL)){
@@ -100,7 +99,7 @@ public class GestorBD_MySQL implements IGestorBD {
                         Date fechaNac = rs.getDate("fecha_nacimiento");
                         String dir = rs.getString("direccion");
 
-                        lstPersonas.add(new Persona(id,nombre,dir,fechaNac.toLocalDate()));
+                        lstPersonas.add(new PersonaDTO(id,nombre,dir,fechaNac.toLocalDate()));
                     }
                 }
             }
@@ -110,7 +109,7 @@ public class GestorBD_MySQL implements IGestorBD {
     }
 
     @Override
-    public int insertarPersona(Persona persona) throws SQLException {
+    public int insertarPersona(PersonaDTO persona) throws SQLException {
 
         if(personaInvalida(persona)){
             throw new IllegalArgumentException("registro de persona inválido " +  persona);
@@ -140,7 +139,7 @@ public class GestorBD_MySQL implements IGestorBD {
         return false;
     }
 
-    private boolean personaInvalida(Persona persona) {
+    private boolean personaInvalida(PersonaDTO persona) {
         if(persona.getIdPersona() < 0)
             return true;
         if(persona.getNombre() == null)
@@ -153,7 +152,7 @@ public class GestorBD_MySQL implements IGestorBD {
     }
 
     @Override
-    public Persona leerPersonaXID(int id) throws SQLException {
+    public PersonaDTO leerPersonaXID(int id) throws SQLException {
         final String cadSQL = "SELECT nombre, direccion, fecha_nacimiento FROM persona " +
                 "where id_persona = ?;";
         try(Connection con = this.getConexionBD()){
@@ -165,7 +164,7 @@ public class GestorBD_MySQL implements IGestorBD {
                         Date fechaNacimiento = rs.getDate("fecha_nacimiento");
                         String nombre = rs.getString("nombre");
                         String direccion = rs.getString("direccion");
-                        Persona p = new Persona(id,nombre,direccion,fechaNacimiento.toLocalDate());
+                        PersonaDTO p = new PersonaDTO(id,nombre,direccion,fechaNacimiento.toLocalDate());
 //                        this.logP.guardarOperacion("LECTURA_X_ID", p);
                         return p;
                     }

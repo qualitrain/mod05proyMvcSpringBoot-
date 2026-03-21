@@ -1,12 +1,10 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.audit.file;
 
 import jakarta.annotation.PreDestroy;
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,7 @@ public class AuditorOperPersonaFile implements ILogPersona {
     }
 
     @Override
-    public int guardarOperacion(String tipoOperacion, Persona persona) {
+    public int guardarOperacion(String tipoOperacion, PersonaDTO persona) {
         this.operaciones.add(new Operacion(persona.getIdPersona(),tipoOperacion));
         return this.operaciones.size();
     }

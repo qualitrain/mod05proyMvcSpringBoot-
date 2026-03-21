@@ -1,18 +1,18 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.entidades;
+package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
 
 import java.util.Objects;
 
-public class DetalleVenta {
+public class DetalleVentaDTO {
     private int numVenta;
     private int numDetalle;
     private int cantidad;
     private String cveArticulo;
     private Float precioUnitario;  // Usamos Float (objeto) porque la columna puede ser NULL
 
-    public DetalleVenta() {
+    public DetalleVentaDTO() {
     }
 
-    public DetalleVenta(int numVenta, int numDetalle, int cantidad, String cveArticulo, Float precioUnitario) {
+    public DetalleVentaDTO(int numVenta, int numDetalle, int cantidad, String cveArticulo, Float precioUnitario) {
         this.numVenta = numVenta;
         this.numDetalle = numDetalle;
         this.cantidad = cantidad;
@@ -65,7 +65,7 @@ public class DetalleVenta {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DetalleVenta that = (DetalleVenta) o;
+        DetalleVentaDTO that = (DetalleVentaDTO) o;
         return numVenta == that.numVenta &&
                numDetalle == that.numDetalle &&
                cantidad == that.cantidad &&

@@ -1,27 +1,27 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.entidades;
+package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Persona {
+public class PersonaDTO {
     private int idPersona;
     private String nombre;
     private String direccion;
     private LocalDate fechaNacimiento;
 
     // Constructor vacío
-    public Persona() {
+    public PersonaDTO() {
     }
 
     // Constructor con todos los campos excepto ID (para inserción)
-    public Persona(String nombre, String direccion, LocalDate fechaNacimiento) {
+    public PersonaDTO(String nombre, String direccion, LocalDate fechaNacimiento) {
         this.nombre = nombre;
         this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
     }
 
     // Constructor completo
-    public Persona(int idPersona, String nombre, String direccion, LocalDate fechaNacimiento) {
+    public PersonaDTO(int idPersona, String nombre, String direccion, LocalDate fechaNacimiento) {
         this.idPersona = idPersona;
         this.nombre = nombre;
         this.direccion = direccion;
@@ -66,7 +66,7 @@ public class Persona {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Persona persona = (Persona) o;
+        PersonaDTO persona = (PersonaDTO) o;
         return idPersona == persona.idPersona;
     }
 

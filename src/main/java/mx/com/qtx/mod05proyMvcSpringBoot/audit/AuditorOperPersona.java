@@ -1,10 +1,9 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.audit;
 
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class AuditorOperPersona implements ILogPersona {
     private Map<Integer,Operacion>  mapOperaciones = new TreeMap<>();
 
     @Override
-    public int guardarOperacion(String tipoOperacion, Persona persona) {
+    public int guardarOperacion(String tipoOperacion, PersonaDTO persona) {
         int nFolio = this.mapOperaciones.size() + 1;
         Operacion operI = new Operacion(nFolio,tipoOperacion,persona);
         this.mapOperaciones.put(nFolio, operI);
@@ -38,5 +37,5 @@ public class AuditorOperPersona implements ILogPersona {
         return new ArrayList<>( this.mapOperaciones.keySet() );
     }
 
-    private record Operacion(int folio, String tipo, Persona p){};
+    private record Operacion(int folio, String tipo, PersonaDTO p){};
 }

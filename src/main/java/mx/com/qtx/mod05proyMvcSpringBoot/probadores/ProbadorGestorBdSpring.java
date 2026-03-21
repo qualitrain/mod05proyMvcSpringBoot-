@@ -1,10 +1,11 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.probadores;
 
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Articulo;
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.DetalleVenta;
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Venta;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.ArticuloDTO;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.DetalleVentaDTO;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.VentaDTO;
 
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorDatosSpring;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
     }
 
     private void probar_leerArticuloXID(String cveArt) {
-        Articulo art = gestorBD.leerArticuloXID(cveArt);
+        ArticuloDTO art = gestorBD.leerArticuloXID(cveArt);
         if(art == null){
             log.warn("Articulo con cve {} NO EXISTE", cveArt);
         }
@@ -39,7 +40,7 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
     }
 
     private void probar_leerPersonaXID(int idPersona) {
-        Persona persona = gestorBD.leerPersonaXID(idPersona);
+        PersonaDTO persona = gestorBD.leerPersonaXID(idPersona);
         if(persona == null){
             log.warn("Persona con id {} NO EXISTE", idPersona);
         }
@@ -49,7 +50,7 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
     }
 
     private void probar_leerVentaXID(int numVta){
-        Venta vta = gestorBD.leerVentaXID(numVta);
+        VentaDTO vta = gestorBD.leerVentaXID(numVta);
         if(vta == null){
             log.warn("Venta con id {} NO EXISTE", numVta);
         }
@@ -59,12 +60,12 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
     }
 
     private void probar_leerDetallesVenta(int numVta){
-        List<DetalleVenta> dets = gestorBD.leerDetallesVenta(numVta);
+        List<DetalleVentaDTO> dets = gestorBD.leerDetallesVenta(numVta);
         if(dets.size() == 0){
             log.warn("Venta {} no tiene detalles ", numVta);
         }
         else{
-            for (DetalleVenta detI : dets) {
+            for (DetalleVentaDTO detI : dets) {
                 log.info("   {}",detI.toString());
             }
         }

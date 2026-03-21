@@ -1,14 +1,12 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.probadores;
 
 import jakarta.annotation.PostConstruct;
-import mx.com.qtx.mod05proyMvcSpringBoot.entidades.Persona;
-import mx.com.qtx.mod05proyMvcSpringBoot.persistencia.GestorBD_MySQL;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorBD;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class ProbadorIGestorBD implements CommandLineRunner {
         log.info("Corriendo en el Hilo {}", Thread.currentThread().toString());
         this.saludar();
         for(int i = 1; i<15; i++) {
-            Persona perI = this.gestorBD.leerPersonaXID(this.getIdAleatorio());
+            PersonaDTO perI = this.gestorBD.leerPersonaXID(this.getIdAleatorio());
             if(perI != null)
                 log.info("Se ha leído a la persona con id = 1 " + perI.toString());
             else{

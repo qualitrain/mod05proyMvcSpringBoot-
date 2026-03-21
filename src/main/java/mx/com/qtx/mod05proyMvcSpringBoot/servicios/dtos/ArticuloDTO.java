@@ -1,17 +1,17 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.entidades;
+package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
 
 import java.util.Objects;
 
-public class Articulo {
+public class ArticuloDTO {
     private String cveArticulo;
     private String descripcion;
     private float costoProv1;
     private float precioLista;
 
-    public Articulo() {
+    public ArticuloDTO() {
     }
 
-    public Articulo(String cveArticulo, String descripcion, float costoProv1, float precioLista) {
+    public ArticuloDTO(String cveArticulo, String descripcion, float costoProv1, float precioLista) {
         this.cveArticulo = cveArticulo;
         this.descripcion = descripcion;
         this.costoProv1 = costoProv1;
@@ -55,7 +55,7 @@ public class Articulo {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Articulo articulo = (Articulo) o;
+        ArticuloDTO articulo = (ArticuloDTO) o;
         return Float.compare(articulo.costoProv1, costoProv1) == 0 &&
                Float.compare(articulo.precioLista, precioLista) == 0 &&
                Objects.equals(cveArticulo, articulo.cveArticulo) &&

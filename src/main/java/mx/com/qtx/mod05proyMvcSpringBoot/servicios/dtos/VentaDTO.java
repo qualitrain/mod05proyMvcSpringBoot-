@@ -1,18 +1,18 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.entidades;
+package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
 
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Venta {
+public class VentaDTO {
     private int numVenta;          // AUTO_INCREMENT, se genera en la BD
     private LocalDate fechaVenta;  // java.time.LocalDate para la columna DATE
     private int idPersonaCte;
     private Integer idPersonaVendedor;  // Puede ser NULL
 
-    public Venta() {
+    public VentaDTO() {
     }
 
-    public Venta(int numVenta, LocalDate fechaVenta, int idPersonaCte, Integer idPersonaVendedor) {
+    public VentaDTO(int numVenta, LocalDate fechaVenta, int idPersonaCte, Integer idPersonaVendedor) {
         this.numVenta = numVenta;
         this.fechaVenta = fechaVenta;
         this.idPersonaCte = idPersonaCte;
@@ -56,7 +56,7 @@ public class Venta {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Venta venta = (Venta) o;
+        VentaDTO venta = (VentaDTO) o;
         return numVenta == venta.numVenta &&
                idPersonaCte == venta.idPersonaCte &&
                Objects.equals(fechaVenta, venta.fechaVenta) &&
