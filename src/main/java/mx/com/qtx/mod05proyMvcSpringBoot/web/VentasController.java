@@ -1,6 +1,8 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.web;
 
 import jakarta.servlet.http.HttpServletRequest;
+import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorVentas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,11 @@ import java.math.BigDecimal;
 @Controller
 public class VentasController {
     final private static Logger log = LoggerFactory.getLogger(VentasController.class);
+    private final IGestorVentas gestorVtas;
+
+    public VentasController(IGestorVentas gestorVtas) {
+        this.gestorVtas = gestorVtas;
+    }
 
     @GetMapping("/consultarArticulo")
     public String irAconsulaArticulo(HttpServletRequest req){
@@ -21,13 +28,25 @@ public class VentasController {
     }
 
     @GetMapping("/buscarArticulos")
-    public String buscarArticulo(@RequestParam(name = "precioLista",defaultValue = "1.0") BigDecimal precioLista,
-                                 String cveArticulo, String descripcion,
-                                 @RequestParam(defaultValue = "0.0") BigDecimal costoProv1, Model model){
-        log.info("buscarArticulo({},{},{},{})", cveArticulo, descripcion, costoProv1, precioLista);
+    public String buscarArticulo(String cveArticulo, Model model){
 
-        model.addAttribute("mensaje","Metodo no disponible. Lo siento mucho");
+        if(cveArticulo == null){
+            model.addAttribute("mensaje","Articulo no especificado");
+            return "consultaArticulo";
+        }
+        if(cveArticulo.trim().isEmpty()){
+            model.addAttribute("mensaje","Articulo no especificado");
+            return "consultaArticulo";
+        }
 
+        Articulo art = this.gestorVtas.getArticuloXID(cveArticulo);
+        if(art == null){
+            model.addAttribute("mensaje","Articulo no encontrado");
+            return "consultaArticulo";
+        }
+
+        model.addAttribute("articulo",art);
+        log.info(art.toString());
         return "consultaArticulo";
     }
 }

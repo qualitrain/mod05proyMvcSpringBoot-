@@ -37,4 +37,14 @@ public class Articulo {
     public void setPrecioLista(float precioLista) {
         this.precioLista = precioLista;
     }
+
+    @Override
+    public String toString() {
+        return "Articulo{" +
+                "cveArticulo='" + cveArticulo + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", costoProv1=" + costoProv1 +
+                ", precioLista=" + precioLista +
+                '}';
+    }
 }

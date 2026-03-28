@@ -1,4 +1,4 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.servicios;
+package mx.com.qtx.mod05proyMvcSpringBoot.core;
 
 
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;

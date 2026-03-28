@@ -1,14 +1,16 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.servicios;
 
+import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.DetalleVenta;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Venta;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.ArticuloDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.DetalleVentaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.VentaDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class GestorVentas {
+public class GestorVentas implements  IGestorVentas {
 
     final private IGestorDatosSpring gestorDatos;
 
@@ -43,5 +45,17 @@ public class GestorVentas {
         }
 
         return vtaInsertada.getNumVenta();
+    }
+
+    public Articulo getArticuloXID(String cveArt){
+        ArticuloDTO artDto = gestorDatos.leerArticuloXID(cveArt);
+        if(artDto == null)
+            return null;
+        Articulo art = new Articulo();
+        art.setCveArticulo(artDto.getCveArticulo());
+        art.setDescripcion(artDto.getDescripcion());
+        art.setCostoProv1(artDto.getCostoProv1());
+        art.setPrecioLista(artDto.getPrecioLista());
+        return art;
     }
 }

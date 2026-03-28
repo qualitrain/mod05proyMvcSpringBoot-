@@ -48,7 +48,8 @@
                         <div class="mb-3">
                             <label for="descripcion" class="form-label">Descripción</label>
                             <input type="text" class="form-control" id="descripcion" name="descripcion"
-                                   placeholder="Ej: Teclado mecánico" autocomplete="off">
+                                   placeholder="Ej: Teclado mecánico" autocomplete="off"
+                                   th:value="${articulo != null? articulo.descripcion : ''}">
                         </div>
 
                         <!-- Campo: Costo proveedor 1 -->
