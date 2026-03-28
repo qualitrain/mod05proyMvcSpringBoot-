@@ -40,7 +40,9 @@
                         <div class="mb-3">
                             <label for="cveArticulo" class="form-label">Clave del Artículo</label>
                             <input type="text" class="form-control" id="cveArticulo" name="cveArticulo"
-                                   placeholder="Ej: A-001" autocomplete="off">
+                                   placeholder="Ej: A-001" autocomplete="off"
+                                   th:value="${articulo != null ? articulo.cveArticulo : ''}"
+                            >
                             <div class="form-text">Búsqueda por coincidencia exacta o parcial (depende del backend).</div>
                         </div>
 
@@ -49,14 +51,16 @@
                             <label for="descripcion" class="form-label">Descripción</label>
                             <input type="text" class="form-control" id="descripcion" name="descripcion"
                                    placeholder="Ej: Teclado mecánico" autocomplete="off"
-                                   th:value="${articulo != null? articulo.descripcion : ''}">
+                                   th:value="${articulo != null ? articulo.descripcion : ''}">
                         </div>
 
                         <!-- Campo: Costo proveedor 1 -->
                         <div class="mb-3">
                             <label for="costoProv1" class="form-label">Costo Proveedor 1</label>
                             <input type="number" class="form-control" id="costoProv1" name="costoProv1"
-                                   step="0.01" placeholder="0.00">
+                                   step="0.01" placeholder="0.00"
+                                   th:value="${articulo != null ? #numbers.formatDecimal(articulo.costoProv1, 1, 2) : ''}"
+                            >
                             <div class="form-text">Puedes ingresar un valor para filtrar por costo exacto.</div>
                         </div>
 
@@ -64,7 +68,9 @@
                         <div class="mb-3">
                             <label for="precioLista" class="form-label">Precio de Lista</label>
                             <input type="number" class="form-control" id="precioLista" name="precioLista"
-                                   step="0.01" placeholder="0.00">
+                                   step="0.01" placeholder="0.00"
+                                   th:value="${articulo != null ? #numbers.formatDecimal(articulo.precioLista, 1, 2) : ''}"
+                            >
                         </div>
 
                         <!-- Botones de acción -->

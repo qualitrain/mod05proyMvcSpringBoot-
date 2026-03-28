@@ -3,6 +3,7 @@ package mx.com.qtx.mod05proyMvcSpringBoot.web;
 import jakarta.servlet.http.HttpServletRequest;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.IGestorVentas;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ public class VentasController {
 
         if(cveArticulo == null){
             model.addAttribute("mensaje","Articulo no especificado");
+            model.addAttribute("articulo", getArticuloVacio());
             return "consultaArticulo";
         }
         if(cveArticulo.trim().isEmpty()){
@@ -48,5 +50,14 @@ public class VentasController {
         model.addAttribute("articulo",art);
         log.info(art.toString());
         return "consultaArticulo";
+    }
+
+    private Articulo  getArticuloVacio() {
+        Articulo artVacio = new Articulo();
+        artVacio.setCveArticulo("");
+        artVacio.setDescripcion("");
+        artVacio.setPrecioLista(0);
+        artVacio.setCostoProv1(0);
+        return artVacio;
     }
 }
