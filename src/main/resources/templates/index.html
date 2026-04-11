@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Principal</title>
+    <link rel="stylesheet" th:href="@{estilos.css}">
 </head>
 <body>
+<div class="encabezado" th:fragment="loguito">
+    <img class="logo" th:src="@{logo.png}">
+</div>
 <h1>Hola Ardillas !!</h1>
 <a href="./consultarArticulo">Ir a la consulta de Artículos</a>
 </body>

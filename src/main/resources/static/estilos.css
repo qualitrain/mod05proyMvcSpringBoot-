@@ -1,0 +1,25 @@
+        .logo{
+            width:3cm;
+        }
+
+        .encabezado {
+            max-width: 1200px;
+            margin: 0 auto;
+         /*   background: white; */
+            padding: 20px;
+        }
+        /* Opcional: Estilo personalizado para espaciado */
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin-top: 2rem;
+            border-radius: 0.5rem;
+        }
+        .btn-submit {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .btn-submit:hover {
+            background-color: #0b5ed7;
+        }
