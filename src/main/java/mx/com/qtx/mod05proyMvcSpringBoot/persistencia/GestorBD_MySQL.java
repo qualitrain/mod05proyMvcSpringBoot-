@@ -1,7 +1,7 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.persistencia;
 
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
-import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorBD;
+import mx.com.qtx.mod05proyMvcSpringBoot.probadores.IGestorBD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

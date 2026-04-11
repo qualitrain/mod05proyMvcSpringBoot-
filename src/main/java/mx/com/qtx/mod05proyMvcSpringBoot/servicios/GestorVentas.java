@@ -1,6 +1,8 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.servicios;
 
+import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorVentas;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
+import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Categoria;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.DetalleVenta;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Venta;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.ArticuloDTO;
@@ -9,8 +11,13 @@ import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.VentaDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 @Service
-public class GestorVentas implements  IGestorVentas {
+public class GestorVentas implements IGestorVentas {
 
     final private IGestorDatosSpring gestorDatos;
 
@@ -18,6 +25,7 @@ public class GestorVentas implements  IGestorVentas {
         this.gestorDatos = gestorDatos;
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Venta recuperarVenta(int numVta){
         Venta vta = new Venta();
@@ -26,6 +34,7 @@ public class GestorVentas implements  IGestorVentas {
         return vta;
     }
 
+    @Override
     @Transactional()
     public int registrarVenta(Venta vta){
         VentaDTO vtaXinsertar = new VentaDTO();
@@ -47,7 +56,8 @@ public class GestorVentas implements  IGestorVentas {
         return vtaInsertada.getNumVenta();
     }
 
-    public Articulo getArticuloXID(String cveArt){
+    @Override
+    public Articulo recuperarArticuloXID(String cveArt){
         ArticuloDTO artDto = gestorDatos.leerArticuloXID(cveArt);
         if(artDto == null)
             return null;
@@ -57,5 +67,19 @@ public class GestorVentas implements  IGestorVentas {
         art.setCostoProv1(artDto.getCostoProv1());
         art.setPrecioLista(artDto.getPrecioLista());
         return art;
+    }
+
+    @Override
+    public List<Categoria> recuperarCategorias(){
+        List<Categoria> lstCategorias = new ArrayList<>();
+        this.gestorDatos.leerCategorias().forEach(catI->lstCategorias.add(new Categoria(catI.getCveCategoria(),catI.getDescripcion())));
+        return lstCategorias;
+    }
+
+    @Override
+    public Map<String,String> recuperarMapCategoriasAlf(){
+        Map<String,String> mapCategorias = new TreeMap<>();
+        this.recuperarCategorias().forEach(catI->mapCategorias.put(catI.getDescripcion(),catI.getCveCategoria()));
+        return mapCategorias;
     }
 }

@@ -25,7 +25,7 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-            /*
+
             probar_leerPersonaXID(5);
             probar_leerVentaXID(40);
             probar_leerDetallesVenta(40);
@@ -37,7 +37,7 @@ public class ProbadorGestorBdSpring implements CommandLineRunner {
                     """;
             probar_exportarDatos(consultaSql);
             probar_insertarDetalleVenta();
-             */
+
             probar_insertarDetalleVenta_artNoExiste();
 
         }

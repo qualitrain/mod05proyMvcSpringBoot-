@@ -1,4 +1,4 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.core;
+package mx.com.qtx.mod05proyMvcSpringBoot.probadores;
 
 
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface IGestorBD {
     Connection getConexionBD() throws SQLException;
+
     List<PersonaDTO> getPersonasTodas() throws SQLException;
     int insertarPersona(PersonaDTO persona) throws SQLException;
     PersonaDTO leerPersonaXID(int id) throws SQLException;

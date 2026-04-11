@@ -2,7 +2,6 @@ package mx.com.qtx.mod05proyMvcSpringBoot.probadores;
 
 import jakarta.annotation.PostConstruct;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.PersonaDTO;
-import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorBD;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.ILogPersona;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

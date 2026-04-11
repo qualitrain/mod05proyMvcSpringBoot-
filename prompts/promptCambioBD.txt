@@ -1,0 +1,251 @@
+
+   prompt PROPUESTO PARA ALTER A LAS TABLAS
+genera el plan para lo siguiente. Si estoy de acuerdo te pedire que lo ejecutes
+en caso contrario, te daré indicaciones.
+   deseamos:
+   a) agregar campos a la tabla Articulo y crear una tabla categoria.
+   b) generar DDL para modificar el esquema que te proporcionaremos enseguida:
+      esquema:
+         /*
+SQLyog - Free MySQL GUI v5.0
+Host - 5.0.22-community-nt : Database - ejemplosjdbc
+*********************************************************************
+Server version : 5.0.22-community-nt
+*/
+
+
+create database if not exists `ejemplosjdbc`;
+
+USE `ejemplosjdbc`;
+
+/*Table structure for table `persona` */
+
+DROP TABLE IF EXISTS `persona`;
+
+CREATE TABLE `persona` (
+  `id_persona` int(5) NOT NULL,
+  `nombre` varchar(40) NOT NULL,
+  `direccion` varchar(45) default NULL,
+  `fecha_nacimiento` date NOT NULL,
+  PRIMARY KEY  (`id_persona`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `articulo` */
+DROP TABLE IF EXISTS `articulo`;
+
+CREATE TABLE `articulo` (
+  `cve_articulo` varchar(15) NOT NULL,
+  `descripcion` varchar(40) NOT NULL,
+  `costo_prov_1` float default '0',
+  `precio_lista` float default '0',
+  PRIMARY KEY  (`cve_articulo`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `detalle_venta` */
+
+DROP TABLE IF EXISTS `detalle_venta`;
+
+CREATE TABLE `detalle_venta` (
+  `num_venta` int(6) NOT NULL,
+  `num_detalle` int(3) NOT NULL,
+  `cantidad` int(4) NOT NULL,
+  `cve_articulo` varchar(15) NOT NULL,
+  `precio_unitario` float default NULL,
+  PRIMARY KEY  (`num_venta`,`num_detalle`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Table structure for table `venta` */
+
+DROP TABLE IF EXISTS `venta`;
+
+CREATE TABLE `venta` (
+  `num_venta` int(6) NOT NULL auto_increment,
+  `fecha_venta` date NOT NULL,
+  `id_persona_cte` int(5) NOT NULL,
+  `id_persona_vendedor` int(5) default NULL,
+  PRIMARY KEY  (`num_venta`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+   c) Los DTOS correspondientes son:
+      package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+public class ArticuloDTO {
+    private String cveArticulo;
+    private String descripcion;
+    private float costoProv1;
+    private float precioLista;
+    private String cveCategoria;
+    private boolean descontinuado;
+    private LocalDate fecUltimaCompra;
+
+    public String getCveCategoria() {
+        return cveCategoria;
+    }
+
+    public void setCveCategoria(String cveCategoria) {
+        this.cveCategoria = cveCategoria;
+    }
+
+    public boolean isDescontinuado() {
+        return descontinuado;
+    }
+
+    public void setDescontinuado(boolean descontinuado) {
+        this.descontinuado = descontinuado;
+    }
+
+    public LocalDate getFecUltimaCompra() {
+        return fecUltimaCompra;
+    }
+
+    public void setFecUltimaCompra(LocalDate fecUltimaCompra) {
+        this.fecUltimaCompra = fecUltimaCompra;
+    }
+
+    public ArticuloDTO() {
+    }
+
+    public ArticuloDTO(String cveArticulo, String descripcion, float costoProv1, float precioLista) {
+        this.cveArticulo = cveArticulo;
+        this.descripcion = descripcion;
+        this.costoProv1 = costoProv1;
+        this.precioLista = precioLista;
+    }
+
+    // Getters y Setters
+    public String getCveArticulo() {
+        return cveArticulo;
+    }
+
+    public void setCveArticulo(String cveArticulo) {
+        this.cveArticulo = cveArticulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public float getCostoProv1() {
+        return costoProv1;
+    }
+
+    public void setCostoProv1(float costoProv1) {
+        this.costoProv1 = costoProv1;
+    }
+
+    public float getPrecioLista() {
+        return precioLista;
+    }
+
+    public void setPrecioLista(float precioLista) {
+        this.precioLista = precioLista;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ArticuloDTO articulo = (ArticuloDTO) o;
+        return Float.compare(articulo.costoProv1, costoProv1) == 0 &&
+               Float.compare(articulo.precioLista, precioLista) == 0 &&
+               Objects.equals(cveArticulo, articulo.cveArticulo) &&
+               Objects.equals(descripcion, articulo.descripcion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cveArticulo, descripcion, costoProv1, precioLista);
+    }
+
+    @Override
+    public String toString() {
+        return "Articulo{" +
+               "cveArticulo='" + cveArticulo + '\'' +
+               ", descripcion='" + descripcion + '\'' +
+               ", costoProv1=" + costoProv1 +
+               ", precioLista=" + precioLista +
+               '}';
+    }
+}
+
+
+y el otro
+package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
+
+public class CategoriaDTO
+{
+    private String cveCategoria;
+    private String descripcion;
+
+    public CategoriaDTO(String cveCategoria, String descripcion) {
+        this.cveCategoria = cveCategoria;
+        this.descripcion = descripcion;
+    }
+
+    public String getCveCategoria() {
+        return cveCategoria;
+    }
+
+    public void setCveCategoria(String cveCategoria) {
+        this.cveCategoria = cveCategoria;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoriaDTO{" +
+                "cveCategoria='" + cveCategoria + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                '}';
+    }
+}
+
+
+
+
+
+RESPUESTA DE DEEPSEEK CON EL SCRIPT PROPUESTO PARA LA MODIFICACION DE LA BASE DE DATOS
+
+USE `ejemplosjdbc`;
+
+-- 1. Crear tabla categoria
+CREATE TABLE IF NOT EXISTS `categoria` (
+  `cve_categoria` VARCHAR(15) NOT NULL,
+  `descripcion` VARCHAR(60) NOT NULL,
+  PRIMARY KEY (`cve_categoria`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- 2. Agregar columnas a articulo (sin FK aún)
+ALTER TABLE `articulo`
+  ADD COLUMN `cve_categoria` VARCHAR(15) NULL AFTER `precio_lista`,
+  ADD COLUMN `descontinuado` TINYINT(1) NOT NULL DEFAULT 0 AFTER `cve_categoria`,
+  ADD COLUMN `fec_ultima_compra` DATE NULL AFTER `descontinuado`;
+
+-- 3. (Recomendado) Insertar una categoría por defecto para referencias existentes
+INSERT INTO `categoria` (`cve_categoria`, `descripcion`)
+VALUES ('SIN_CAT', 'Sin categoría asignada')
+ON DUPLICATE KEY UPDATE `descripcion` = `descripcion`;
+
+-- 4. Actualizar registros existentes de articulo con la categoría por defecto
+UPDATE `articulo` SET `cve_categoria` = 'SIN_CAT' WHERE `cve_categoria` IS NULL;
+
+-- 5. Modificar columna cve_categoria para que sea NOT NULL y agregar FK
+ALTER TABLE `articulo`
+  MODIFY COLUMN `cve_categoria` VARCHAR(15) NOT NULL,
+  ADD CONSTRAINT `fk_articulo_categoria`
+    FOREIGN KEY (`cve_categoria`) REFERENCES `categoria`(`cve_categoria`)
+    ON UPDATE RESTRICT ON DELETE RESTRICT;

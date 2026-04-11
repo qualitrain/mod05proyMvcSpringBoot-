@@ -1,5 +1,6 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class ArticuloDTO {
@@ -7,6 +8,9 @@ public class ArticuloDTO {
     private String descripcion;
     private float costoProv1;
     private float precioLista;
+    private String cveCategoria;
+    private boolean descontinuado;
+    private LocalDate fecUltimaCompra;
 
     public ArticuloDTO() {
     }
@@ -51,6 +55,30 @@ public class ArticuloDTO {
         this.precioLista = precioLista;
     }
 
+    public String getCveCategoria() {
+        return cveCategoria;
+    }
+
+    public void setCveCategoria(String cveCategoria) {
+        this.cveCategoria = cveCategoria;
+    }
+
+    public boolean isDescontinuado() {
+        return descontinuado;
+    }
+
+    public void setDescontinuado(boolean descontinuado) {
+        this.descontinuado = descontinuado;
+    }
+
+    public LocalDate getFecUltimaCompra() {
+        return fecUltimaCompra;
+    }
+
+    public void setFecUltimaCompra(LocalDate fecUltimaCompra) {
+        this.fecUltimaCompra = fecUltimaCompra;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,11 +97,14 @@ public class ArticuloDTO {
 
     @Override
     public String toString() {
-        return "Articulo{" +
-               "cveArticulo='" + cveArticulo + '\'' +
-               ", descripcion='" + descripcion + '\'' +
-               ", costoProv1=" + costoProv1 +
-               ", precioLista=" + precioLista +
-               '}';
+        return "ArticuloDTO{" +
+                "cveArticulo='" + cveArticulo + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", costoProv1=" + costoProv1 +
+                ", precioLista=" + precioLista +
+                ", cveCategoria='" + cveCategoria + '\'' +
+                ", descontinuado=" + descontinuado +
+                ", fecUltimaCompra=" + fecUltimaCompra +
+                '}';
     }
 }
