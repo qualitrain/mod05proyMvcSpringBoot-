@@ -11,6 +11,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Locale;
 
@@ -41,20 +42,23 @@ public class VentasController {
         return "updateArticulo";
     }
 
+    @PostMapping("/procesarInsercionArticulo")
+    public String procesarInsercionArticulo(Articulo art){
+        log.info("procesarInsercionArticulo({})",art);
+        this.gestorVtas.insertarArticulo(art);
+
+        return "consultaArticulo";
+    }
+
     @GetMapping("/buscarArticulos")
     public String buscarArticulo(String cveArticulo, Model model){
 
         final String msgArtNoEspec = getMensajeI18n("servicio.articulos.error.artNoEspecificado");
         final String msgArtNoExiste = getMensajeI18n("servicio.articulos.error.artNoExiste");
-        if(cveArticulo == null){
-            model.addAttribute("mensaje",msgArtNoEspec);
-            model.addAttribute("articulo", getArticuloVacio());
-            return "consultaArticulo";
-        }
-        if(cveArticulo.trim().isEmpty()){
-            model.addAttribute("mensaje",msgArtNoEspec);
-            return "consultaArticulo";
-        }
+
+        final String vistaCveArticuloAusente = checarCveArticuloAusente(cveArticulo, model, msgArtNoEspec);
+        if (vistaCveArticuloAusente != null)
+            return vistaCveArticuloAusente;
 
         Articulo art = this.gestorVtas.recuperarArticuloXID(cveArticulo);
         if(art == null){
@@ -65,6 +69,19 @@ public class VentasController {
         model.addAttribute("articulo",art);
         log.info(art.toString());
         return "consultaArticulo";
+    }
+
+    private String checarCveArticuloAusente(String cveArticulo, Model model, String msgArtNoEspec) {
+        if(cveArticulo == null){
+            model.addAttribute("mensaje", msgArtNoEspec);
+            model.addAttribute("articulo", getArticuloVacio());
+            return "consultaArticulo";
+        }
+        if(cveArticulo.trim().isEmpty()){
+            model.addAttribute("mensaje", msgArtNoEspec);
+            return "consultaArticulo";
+        }
+        return null;
     }
 
     private String getMensajeI18n(String llaveMsg) {

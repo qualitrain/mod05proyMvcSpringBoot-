@@ -84,7 +84,7 @@ public class Articulo {
                 ", descripcion='" + descripcion + '\'' +
                 ", costoProv1=" + costoProv1 +
                 ", precioLista=" + precioLista +
-                ", cveCategoria='" + categoria == null ? "" : categoria.getCveCategoria()
+                ", cveCategoria='" + ( (categoria == null) ? "" : categoria.getCveCategoria())
                 + '\'' +
                 ", descontinuado=" + descontinuado +
                 ", fecUltimaCompra=" + fecUltimaCompra +

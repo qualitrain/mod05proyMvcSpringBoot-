@@ -20,11 +20,11 @@
                 </div>
                 <div class="card-body">
                     <!-- Formulario de actualización con th:object y método POST -->
-                    <form th:action="@{/actualizarArticulo}" th:object="${articulo}" method="post">
+                    <form th:action="@{/procesarInsercionArticulo}" th:object="${articulo}" method="post">
                         <!-- Clave de artículo (solo lectura) -->
                         <div class="mb-3">
                             <label for="cveArticulo" class="form-label">Clave del artículo</label>
-                            <input type="text" class="form-control" id="cveArticulo" th:field="*{cveArticulo}" readonly>
+                            <input type="text" class="form-control" id="cveArticulo" th:field="*{cveArticulo}" >
                         </div>
 
                         <!-- Descripción -->

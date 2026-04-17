@@ -15,4 +15,6 @@ public interface IGestorVentas {
     List<Categoria> recuperarCategorias();
 
     Map<String,String> recuperarMapCategoriasAlf();
+
+    String insertarArticulo(Articulo art);
 }
