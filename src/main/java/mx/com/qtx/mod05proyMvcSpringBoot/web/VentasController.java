@@ -15,10 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 @Controller
 public class VentasController {
@@ -43,12 +45,14 @@ public class VentasController {
         log.info("irAinsercionArticulo()");
         Articulo art = getArticuloVacio();
         modelo.addAttribute("articulo",art);
-        modelo.addAttribute("categoriasMap", this.gestorVtas.recuperarMapCategoriasAlf());
+//        modelo.addAttribute("categoriasMap", this.gestorVtas.recuperarMapCategoriasAlf());
         return "updateArticulo";
     }
 
     @PostMapping("/procesarInsercionArticulo")
-    public String procesarInsercionArticulo(@Validated(IGrupoValidacionArticulo.class) Articulo art,
+    public String procesarInsercionArticulo(@Validated(IGrupoValidacionArticulo.class)
+                                            @ModelAttribute("articulo")
+                                            Articulo art,
                                             BindingResult resulValidacion,
                                             Model model){
         log.info("procesarInsercionArticulo({})",art);
@@ -57,7 +61,7 @@ public class VentasController {
             int nErrores = resulValidacion.getErrorCount();
             mostrarErroresValidacion(resulValidacion, nErrores);
             model.addAttribute("mensaje","Hay " + nErrores + " errores");
-            model.addAttribute("articulo", art);
+//            model.addAttribute("articulo", art);
             model.addAttribute("resulValidacion", resulValidacion);
             return "updateArticulo";
         }
@@ -65,6 +69,11 @@ public class VentasController {
         this.gestorVtas.insertarArticulo(art);
 
         return "consultaArticulo";
+    }
+
+    @ModelAttribute("categoriasMap")
+    public Map<String,String> publicarMapaCategorias(){
+        return this.gestorVtas.recuperarMapCategoriasAlf();
     }
 
     private static void mostrarErroresValidacion(BindingResult resulValidacion, int nErrores) {
