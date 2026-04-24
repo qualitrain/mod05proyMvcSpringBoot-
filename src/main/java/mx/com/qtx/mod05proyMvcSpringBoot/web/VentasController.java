@@ -56,8 +56,10 @@ public class VentasController {
         if(resulValidacion.hasErrors()){
             int nErrores = resulValidacion.getErrorCount();
             mostrarErroresValidacion(resulValidacion, nErrores);
-            model.addAttribute("estadoValidacion","Hay " + nErrores + " errores");
-            return "consultaArticulo";
+            model.addAttribute("mensaje","Hay " + nErrores + " errores");
+            model.addAttribute("articulo", art);
+            model.addAttribute("resulValidacion", resulValidacion);
+            return "updateArticulo";
         }
 
         this.gestorVtas.insertarArticulo(art);
@@ -75,7 +77,7 @@ public class VentasController {
                         );
 
         resulValidacion.getFieldErrors()
-                .forEach(fErrI->log.error("campo:{}, codigo:{}, msj:{}, valor rechazado:{}, argumentos:{}",
+                .forEach(fErrI->log.error("campo:{}, codigo:{}, msj:{}, valor rechazado:[{}], argumentos:{}",
                         fErrI.getField(),
                         fErrI.getCode(),
                         fErrI.getDefaultMessage(),

@@ -11,8 +11,8 @@ import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.validacion.IGrupoValidac
 import java.time.LocalDate;
 
 public class Articulo {
-    @Size(min = 3, max = 30, message = "La clave del artículo debe tener entre 3 y 30 caracteres", groups = {IGrupoValidacionArticulo.class})
-    @NotNull(message = "La clave del artículo es obligatoria", groups = {IGrupoValidacionArticulo.class})
+//    @Size(min = 3, max = 30, message = "entidad.articulo.cveArticulo.error.size", groups = {IGrupoValidacionArticulo.class})
+    @Size(min = 3, max = 30, message = "La clave del articulo debe tener entre 3 y 30 caracteres", groups = {IGrupoValidacionArticulo.class})    @NotNull(message = "La clave del artículo es obligatoria", groups = {IGrupoValidacionArticulo.class})
     private String cveArticulo;
 
     @Size(min = 3, max = 60, message = "La descripcion del artículo debe tener entre 3 y 60 caracteres", groups = {IGrupoValidacionArticulo.class})
