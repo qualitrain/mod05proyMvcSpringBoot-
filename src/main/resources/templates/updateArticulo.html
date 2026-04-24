@@ -31,12 +31,12 @@
                         <div th:if="${resulValidacion !=null and
                                                   #lists.size(resulValidacion.getFieldErrors('cveArticulo')) gt 0}"
                              class="alert alert-warning mt-3" role="alert">
-                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('cveArticulo')}"
-                                 th:text="#{${errorI.defaultMessage}}">
-                            </div-->
                             <div th:each="errorI : ${resulValidacion.getFieldErrors('cveArticulo')}"
-                                 th:text="${errorI.defaultMessage}">
+                                 th:text="#{${errorI.defaultMessage}}">
                             </div>
+                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('cveArticulo')}"
+                                 th:text="${errorI.defaultMessage}">
+                            </div-->
                         </div>
                     </div>
 
@@ -50,12 +50,12 @@
                         <div th:if="${resulValidacion !=null and
                                                   #lists.size(resulValidacion.getFieldErrors('descripcion')) gt 0}"
                              class="alert alert-warning mt-3" role="alert">
-                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('descripcion')}"
-                                 th:text="#{${errorI.defaultMessage}}">
-                            </div-->
                             <div th:each="errorI : ${resulValidacion.getFieldErrors('descripcion')}"
-                                 th:text="${errorI.defaultMessage}">
+                                 th:text="#{${errorI.defaultMessage}}">
                             </div>
+                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('descripcion')}"
+                                 th:text="${errorI.defaultMessage}">
+                            </div-->
                         </div>
                     </div>
 
@@ -69,12 +69,12 @@
                         <div th:if="${resulValidacion !=null and
                                                   #lists.size(resulValidacion.getFieldErrors('costoProv1')) gt 0}"
                              class="alert alert-warning mt-3" role="alert">
-                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('costoProv1')}"
-                                 th:text="#{${errorI.defaultMessage}}">
-                            </div-->
                             <div th:each="errorI : ${resulValidacion.getFieldErrors('costoProv1')}"
-                                 th:text="${errorI.defaultMessage}">
+                                 th:text="#{${errorI.defaultMessage}}">
                             </div>
+                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('costoProv1')}"
+                                 th:text="${errorI.defaultMessage}">
+                            </div-->
                         </div>
                     </div>
 
@@ -88,12 +88,12 @@
                         <div th:if="${resulValidacion !=null and
                                                   #lists.size(resulValidacion.getFieldErrors('precioLista')) gt 0}"
                              class="alert alert-warning mt-3" role="alert">
-                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('precioLista')}"
-                                 th:text="#{${errorI.defaultMessage}}">
-                            </div-->
                             <div th:each="errorI : ${resulValidacion.getFieldErrors('precioLista')}"
-                                 th:text="${errorI.defaultMessage}">
+                                 th:text="#{${errorI.defaultMessage}}">
                             </div>
+                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('precioLista')}"
+                                 th:text="${errorI.defaultMessage}">
+                            </div-->
                         </div>
                     </div>
 
@@ -110,12 +110,12 @@
                         <div th:if="${resulValidacion !=null and
                                                   #lists.size(resulValidacion.getFieldErrors('categoria.cveCategoria')) gt 0}"
                              class="alert alert-warning mt-3" role="alert">
-                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('categoria.cveCategoria')}"
-                                 th:text="#{${errorI.defaultMessage}}">
-                            </div-->
                             <div th:each="errorI : ${resulValidacion.getFieldErrors('categoria.cveCategoria')}"
-                                 th:text="${errorI.defaultMessage}">
+                                 th:text="#{${errorI.defaultMessage}}">
                             </div>
+                            <!--div-- th:each="errorI : ${resulValidacion.getFieldErrors('categoria.cveCategoria')}"
+                                 th:text="${errorI.defaultMessage}">
+                            </div-->
                         </div>
                     </div>
 

@@ -17,8 +17,8 @@ public class Mod05proyMvcSpringBootApplication {
 
     @Bean
     public LocaleResolver localeResolver() {
-        FixedLocaleResolver resolver = new FixedLocaleResolver(Locale.of("es","MX"));
-    //    FixedLocaleResolver resolver = new FixedLocaleResolver(Locale.US);
+    //    FixedLocaleResolver resolver = new FixedLocaleResolver(Locale.of("es","MX"));
+        FixedLocaleResolver resolver = new FixedLocaleResolver(Locale.US);
     //    FixedLocaleResolver resolver = new FixedLocaleResolver(Locale.of("or","IN"));
         return resolver;
     }
