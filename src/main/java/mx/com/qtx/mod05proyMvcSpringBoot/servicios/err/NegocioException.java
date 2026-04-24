@@ -49,4 +49,11 @@ public class NegocioException extends RuntimeException{
     public void setRecomendacion(String recomendacion) {
         this.recomendacion = recomendacion;
     }
+
+    @Override
+    public String toString(){
+        String msj = this.getClass().getSimpleName() + ": " + this.descripcion + ". " +
+                "Se ha violado la regla de que " + this.regla + ". " + this.recomendacion;
+        return msj;
+    }
 }

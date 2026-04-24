@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
 import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorVentas;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.validacion.IGrupoValidacionArticulo;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.err.InsercionDuplicadaException;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.err.NegocioException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class VentasController {
@@ -59,16 +59,27 @@ public class VentasController {
 
         if(resulValidacion.hasErrors()){
             int nErrores = resulValidacion.getErrorCount();
-            mostrarErroresValidacion(resulValidacion, nErrores);
             model.addAttribute("mensaje","Hay " + nErrores + " errores");
-//            model.addAttribute("articulo", art);
             model.addAttribute("resulValidacion", resulValidacion);
             return "updateArticulo";
         }
-
-        this.gestorVtas.insertarArticulo(art);
-
-        return "consultaArticulo";
+        try {
+            this.gestorVtas.insertarArticulo(art);
+            model.addAttribute("mensaje","Operación Exitosa");
+            return "updateArticulo";
+        }
+        catch(NegocioException idex){
+            model.addAttribute("mensaje",idex.toString());
+            return "updateArticulo";
+        }
+        catch(Exception ex){
+            String idError = UUID.randomUUID().toString();
+            log.error(idError + ":" + ex.getMessage());
+            Arrays.stream(ex.getStackTrace())
+                    .forEach(stI->log.error(stI.getFileName() + ", linea " + stI.getLineNumber()));
+            model.addAttribute("mensaje","Cve error:" + idError);
+            return "updateArticulo";
+        }
     }
 
     @ModelAttribute("categoriasMap")
