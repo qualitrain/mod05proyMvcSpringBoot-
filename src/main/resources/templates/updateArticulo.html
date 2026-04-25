@@ -128,7 +128,21 @@
                     <!-- Fecha de última compra -->
                     <div class="mb-3">
                         <label for="fecUltimaCompra" class="form-label">Fecha de última compra</label>
-                        <input type="date" class="form-control" id="fecUltimaCompra" th:field="*{fecUltimaCompra}">
+                        <input type="date" class="form-control" id="fecUltimaCompra" th:field="*{fecUltimaCompra}"
+                               th:classappend="${resulValidacion != null
+                               and #lists.size(resulValidacion.getFieldErrors('fecUltimaCompra')) gt 0} ? 'border-danger' :''">
+                        <!-- Mensajes de error resultados de la validacion -->
+                        <div th:if="${resulValidacion !=null and
+                                                  #lists.size(resulValidacion.getFieldErrors('fecUltimaCompra')) gt 0}"
+                             class="alert alert-warning mt-3" role="alert">
+                            <div th:each="errorI : ${resulValidacion.getFieldErrors('fecUltimaCompra')}"
+                                 th:text="#{${errorI.defaultMessage}}">
+                            </div>
+                            <!--div th:each="errorI : ${resulValidacion.getFieldErrors('fecUltimaCompra')}"
+                                 th:text="${errorI.defaultMessage}">
+                            </div-->
+                        </div>
+
                     </div>
 
                         <!-- Botones de acción -->

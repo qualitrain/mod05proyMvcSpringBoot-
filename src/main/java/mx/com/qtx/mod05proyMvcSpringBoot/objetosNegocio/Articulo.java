@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.groups.ConvertGroup;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.validacion.IGrupoValidacionArticulo;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.validacion.IGrupoValidacionCategoria;
+import mx.com.qtx.mod05proyMvcSpringBoot.util.validacion.FechaActualoAnterior;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -30,6 +32,9 @@ public class Articulo {
 //    private String cveCategoria;
     private boolean descontinuado;
 
+    @FechaActualoAnterior(message = "entidad.articulo.fecUltimaCompra.error.FechaActualoAnterior",
+                        groups = {IGrupoValidacionArticulo.class})
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fecUltimaCompra;
 
     @Valid  // ← Activa validación cascada (sin groups aquí)
