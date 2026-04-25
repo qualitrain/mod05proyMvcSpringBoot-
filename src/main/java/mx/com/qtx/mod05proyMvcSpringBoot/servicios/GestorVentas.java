@@ -6,6 +6,7 @@ import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Categoria;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.DetalleVenta;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Venta;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.ArticuloDTO;
+import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.CategoriaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.DetalleVentaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.VentaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.err.InsercionDuplicadaException;
@@ -70,8 +71,35 @@ public class GestorVentas implements IGestorVentas {
         art.setDescripcion(artDto.getDescripcion());
         art.setCostoProv1(artDto.getCostoProv1());
         art.setPrecioLista(artDto.getPrecioLista());
+        art.setDescontinuado(artDto.isDescontinuado());
+        art.setFecUltimaCompra(artDto.getFecUltimaCompra());
+
+        if(artDto.getCveCategoria() == null)
+            return art;
+
+        Categoria categoria = this.recuperarCategoriaXID(artDto.getCveCategoria());
+        if(categoria == null){
+            Categoria catVacia = new Categoria();
+            catVacia.setCveCategoria(artDto.getCveCategoria());
+            art.setCategoria(categoria);
+            return art;
+        }
+
+        art.setCategoria(categoria);
         return art;
     }
+
+    @Override
+    public Categoria recuperarCategoriaXID(String cveCategoria){
+        CategoriaDTO catDto = gestorDatos.leerCategoriaXID(cveCategoria);
+        if(catDto == null)
+            return null;
+        Categoria categoria = new Categoria();
+        categoria.setCveCategoria(catDto.getCveCategoria());
+        categoria.setDescripcion(catDto.getDescripcion());
+        return categoria;
+    }
+
 
     @Override
     public List<Categoria> recuperarCategorias(){
