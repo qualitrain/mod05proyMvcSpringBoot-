@@ -10,6 +10,7 @@ import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.CategoriaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.DetalleVentaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.dtos.VentaDTO;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.err.InsercionDuplicadaException;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,28 @@ public class GestorVentas implements IGestorVentas {
         ArticuloDTO artDto = gestorDatos.leerArticuloXID(cveArt);
         if(artDto == null)
             return null;
+        Articulo art = getArticuloDesdeDTO(artDto);
+
+        if(artDto.getCveCategoria() == null)
+            return art;
+
+        Categoria categoria = this.recuperarCategoriaXID(artDto.getCveCategoria());
+        if(categoria == null){
+            agregarCategoriaVaciaAarticulo(artDto, art, categoria);
+            return art;
+        }
+
+        art.setCategoria(categoria);
+        return art;
+    }
+
+    private static void agregarCategoriaVaciaAarticulo(ArticuloDTO artDto, Articulo art, Categoria categoria) {
+        Categoria catVacia = new Categoria();
+        catVacia.setCveCategoria(artDto.getCveCategoria());
+        art.setCategoria(categoria);
+    }
+
+    private static @NonNull Articulo getArticuloDesdeDTO(ArticuloDTO artDto) {
         Articulo art = new Articulo();
         art.setCveArticulo(artDto.getCveArticulo());
         art.setDescripcion(artDto.getDescripcion());
@@ -73,21 +96,46 @@ public class GestorVentas implements IGestorVentas {
         art.setPrecioLista(artDto.getPrecioLista());
         art.setDescontinuado(artDto.isDescontinuado());
         art.setFecUltimaCompra(artDto.getFecUltimaCompra());
-
-        if(artDto.getCveCategoria() == null)
-            return art;
-
-        Categoria categoria = this.recuperarCategoriaXID(artDto.getCveCategoria());
-        if(categoria == null){
-            Categoria catVacia = new Categoria();
-            catVacia.setCveCategoria(artDto.getCveCategoria());
-            art.setCategoria(categoria);
-            return art;
-        }
-
-        art.setCategoria(categoria);
         return art;
     }
+
+    @Override
+    public List<Articulo> recuperarArticulos(){
+        List<Articulo> lstArticulos = new ArrayList<>();
+
+        this.gestorDatos.leerArticulos().forEach(artDtoI -> {
+            Articulo art = getArticuloDesdeDTO(artDtoI);
+            if(artDtoI.getCveCategoria() == null) {
+                lstArticulos.add(art);
+                return;
+            }
+
+            Categoria categoria = this.recuperarCategoriaXID(artDtoI.getCveCategoria());
+            if(categoria == null){
+                agregarCategoriaVaciaAarticulo(artDtoI, art, categoria);
+                lstArticulos.add(art);
+                return;
+            }
+
+            art.setCategoria(categoria);
+            lstArticulos.add(art);
+        });
+
+        return lstArticulos;
+    }
+
+    @Override
+    public List<Articulo> recuperarArticulosSinCategorias(){
+        List<Articulo> lstArticulos = new ArrayList<>();
+
+        this.gestorDatos.leerArticulos().forEach(artDtoI -> {
+            Articulo art = getArticuloDesdeDTO(artDtoI);
+            lstArticulos.add(art);
+        });
+
+        return lstArticulos;
+    }
+
 
     @Override
     public Categoria recuperarCategoriaXID(String cveCategoria){

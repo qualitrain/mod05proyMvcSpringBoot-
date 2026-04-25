@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,8 +29,15 @@ public class ApiVentasController {
         return articulo;
     }
 
-    //Pendiente
-    public List<Articulo> getArticulos(){
-        return null;
+    @GetMapping(path = "/api/articulos", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Articulo> getArticulosConSinCategoria(
+            @RequestParam(name = "inccat", required = false, defaultValue = "false")
+            boolean incluirCategorias){
+        if(incluirCategorias)
+            return this.gestorVtas.recuperarArticulos();
+        else {
+            return this.gestorVtas.recuperarArticulosSinCategorias();
+        }
+
     }
 }

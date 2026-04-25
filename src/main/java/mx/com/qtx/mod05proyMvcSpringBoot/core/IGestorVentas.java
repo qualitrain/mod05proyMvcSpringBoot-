@@ -12,6 +12,10 @@ public interface IGestorVentas {
     int registrarVenta(Venta vta);
     Articulo recuperarArticuloXID(String cveArt);
 
+    List<Articulo> recuperarArticulos();
+
+    List<Articulo> recuperarArticulosSinCategorias();
+
     Categoria recuperarCategoriaXID(String cveCategoria);
 
     List<Categoria> recuperarCategorias();
