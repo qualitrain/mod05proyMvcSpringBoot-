@@ -3,10 +3,16 @@ package mx.com.qtx.mod05proyMvcSpringBoot.web;
 import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorVentas;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Categoria;
+import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.validacion.IGrupoValidacionArticulo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,5 +65,43 @@ public class ApiVentasController {
         return respuesta;
     }
 
+    @PostMapping(path="/api/articulos",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Articulo postArticulo(@RequestBody @Validated(IGrupoValidacionArticulo.class) Articulo art,
+                                 BindingResult resulValidacion
+                                  ){
 
+        log.info("postArticulo({})",art);
+        if(resulValidacion.hasErrors()){
+            int nErrores = resulValidacion.getErrorCount();
+            log.error("Hay errores:{}",resulValidacion.toString());
+            throw new ValidacionException("Errores de validacion->{}" + resulValidacion.toString());
+        }
+        try {
+            this.gestorVtas.insertarArticulo(art);
+            return art;
+        }
+        catch(Exception ex){
+            log.error("Exception:{}",ex.toString());
+            throw ex;
+        }
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorCte> manejarExcepcion(HttpMessageNotReadableException nex){
+        ErrorCte errorCte = new ErrorCte("Cuerpo de petición no se puede leer");
+        return new ResponseEntity<ErrorCte>(errorCte, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorCte> manejarExcepcionDeValidacion(ValidacionException vex){
+        ErrorCte errorCte = new ErrorCte(vex.getMessage());
+        return new ResponseEntity<ErrorCte>(errorCte, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorCte> manejarErorIntegridad(DataIntegrityViolationException vex){
+        ErrorCte errorCte = new ErrorCte("Error de integridad");
+        return new ResponseEntity<ErrorCte>(errorCte, HttpStatus.BAD_REQUEST);
+    }
 }

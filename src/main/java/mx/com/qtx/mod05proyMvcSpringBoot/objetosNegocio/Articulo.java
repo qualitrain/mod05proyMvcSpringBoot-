@@ -18,7 +18,8 @@ public class Articulo {
     private String cveArticulo;
 
     @Size(min = 3, max = 60, message = "entidad.articulo.descripcion.error.size", groups = {IGrupoValidacionArticulo.class})
-//    @Size(min = 3, max = 60, message = "La descripcion del artículo debe tener entre 3 y 60 caracteres", groups = {IGrupoValidacionArticulo.class})
+    @NotNull (message = "entidad.articulo.descripcion.error.size", groups = {IGrupoValidacionArticulo.class})
+    //    @Size(min = 3, max = 60, message = "La descripcion del artículo debe tener entre 3 y 60 caracteres", groups = {IGrupoValidacionArticulo.class})
     private String descripcion;
 
     @Positive(message = "entidad.articulo.costoProv1.error.positive", groups = {IGrupoValidacionArticulo.class})
