@@ -2,13 +2,12 @@ package mx.com.qtx.mod05proyMvcSpringBoot.web;
 
 import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorVentas;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
+import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Categoria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,4 +39,25 @@ public class ApiVentasController {
         }
 
     }
+
+    @GetMapping(path = "/api/categorias/{cveCategoria}")
+    public ResponseEntity<Categoria> getCategoriaXcve(@PathVariable String cveCategoria){
+        Categoria cat = this.gestorVtas.recuperarCategoriaXID(cveCategoria);
+
+        ResponseEntity<Categoria> respuesta = ResponseEntity.status(201)
+                                                            .header("FOLIO","5801")
+                                                            .body(cat);
+        return respuesta;
+    }
+
+    @GetMapping(path="/api/categorias")
+//    public ResponseEntity<List<Categoria>> getCategporias(){
+    public ResponseEntity<Object> getCategporias(){
+        List<Categoria> lstCategorias = this.gestorVtas.recuperarCategorias();
+        ResponseEntity<Object> respuesta = ResponseEntity.ok().header("SIZE","" +lstCategorias.size())
+                .body(lstCategorias);
+        return respuesta;
+    }
+
+
 }
