@@ -17,11 +17,27 @@ public class ConfiguracionSeguridad {
 
     private static final Logger log = LoggerFactory.getLogger(ConfiguracionSeguridad.class);
 
-    @Bean
-    SecurityFilterChain configurarCadenaFiltradoSeguridad(HttpSecurity http){
+    //@Bean
+    SecurityFilterChain configurarCadenaFiltradoSeguridadMuyBasica(HttpSecurity http){
         http.authorizeHttpRequests( (aut)->aut.anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
+    @Bean
+    SecurityFilterChain configurarCadenaFiltradoSeguridad(HttpSecurity http){
+        http.authorizeHttpRequests( (aut)->aut
+                        .requestMatchers("/*.css","/*.png","/index.html","/error*","/","/error/**").permitAll()
+                        .requestMatchers("/login","/logout").permitAll()
+                        .requestMatchers("/consultarArticulo","/buscarArticulos").hasRole("vtas")
+                        .requestMatchers("/insertarArticulo","/procesarInsercionArticulo").hasRole("compras")
+                        .requestMatchers("/api/**").hasRole("cte")
+                        .requestMatchers("/**").authenticated()
+                )
+                .csrf(c->c.disable())
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }
@@ -38,7 +54,7 @@ public class ConfiguracionSeguridad {
                 .build();
         UserDetails usuario3 = User.withDefaultPasswordEncoder().username("tavo")
                 .password("tlatelolko")
-                .roles("compras")
+                .roles("compras","cte")
                 .build();
 
         InMemoryUserDetailsManager bdUSuarios = new InMemoryUserDetailsManager(usuario1, usuario2, usuario3);
