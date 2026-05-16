@@ -93,7 +93,7 @@ public class ConfiguracionSeguridad {
         return bdUSuarios;
     }
 
-    @Bean
+    //@Bean
     UserDetailsManager getBdUsuarios(@Qualifier("seguridadDataSource") DataSource seguridadDataSource){
         UserDetails usuarioAlex = User.withDefaultPasswordEncoder().username("alex")
                 .password("tekamachalko")
@@ -105,6 +105,37 @@ public class ConfiguracionSeguridad {
                 .build();
         UserDetails usuarioTavo = User.withDefaultPasswordEncoder().username("tavo")
                 .password("tlatelolko")
+                .roles("compras","cte")
+                .build();
+
+        JdbcUserDetailsManager managerUsuarios = new JdbcUserDetailsManager(seguridadDataSource);
+
+        if(managerUsuarios.userExists(usuarioAlex.getUsername()) == false){
+            managerUsuarios.createUser(usuarioAlex);
+        }
+        if(managerUsuarios.userExists(usuarioDavid.getUsername()) == false){
+            managerUsuarios.createUser(usuarioDavid);
+        }
+        if(managerUsuarios.userExists(usuarioTavo.getUsername()) == false){
+            managerUsuarios.createUser(usuarioTavo);
+        }
+        return managerUsuarios;
+    }
+
+    @Bean
+    UserDetailsManager getBdUsuarios_pwdConHash(@Qualifier("seguridadDataSource") DataSource seguridadDataSource){
+        UserDetails usuarioAlex = User.withUsername("alex")
+                                        .password("{bcrypt}$2a$10$MJQOHZ61IRh4UWz6T0xB2eXWBoaKJ4VvK18MdwVjl8lSMaL/jOK32")
+                                        .roles("admin","vtas")
+                                        .build();
+
+        UserDetails usuarioDavid = User.withUsername("david")
+                .password("{bcrypt}$2a$10$pMX/cg/gYMsOYV6SGa0byOZx93I2RsL6BMlKxHIvMiUnLnIfQL6v6")
+                .roles("vtas","compras")
+                .build();
+
+        UserDetails usuarioTavo = User.withUsername("tavo")
+                .password("{bcrypt}$2a$10$Pb4kIdnbSsyVFzalrl9TMuQlopJSxm99odTlNAk7l0O8Y2hiPFXuC")
                 .roles("compras","cte")
                 .build();
 
