@@ -3,6 +3,9 @@ package mx.com.qtx.mod05proyMvcSpringBoot.seguridad;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -14,9 +17,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
+import javax.sql.DataSource;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -28,6 +34,19 @@ public class ConfiguracionSeguridad {
     public static final int HORA_INICIO_DIA_LABORABLE = 9;
     public static final int HORA_FIN_DIA_LABORABLE = 18;
     public static final String PREFIJO_IP = "192.168";
+
+
+    @Bean
+    @ConfigurationProperties("spring.datasource.security")
+    public DataSourceProperties seguridadProperties() {
+        return new DataSourceProperties();
+    }
+
+    @Bean
+      public DataSource seguridadDataSource(@Qualifier("seguridadProperties")DataSourceProperties seguridadProperties) {
+        log.info("Creando DataSource para seguridad");
+        return seguridadProperties.initializeDataSourceBuilder().build();
+    }
 
     //@Bean
     SecurityFilterChain configurarCadenaFiltradoSeguridadMuyBasica(HttpSecurity http){
@@ -55,7 +74,7 @@ public class ConfiguracionSeguridad {
         return http.build();
     }
 
-    @Bean
+    //@Bean
     UserDetailsService crearBDUsuarios(){
         UserDetails usuario1 = User.withDefaultPasswordEncoder().username("alex")
                                                                 .password("tekamachalko")
@@ -72,6 +91,35 @@ public class ConfiguracionSeguridad {
 
         InMemoryUserDetailsManager bdUSuarios = new InMemoryUserDetailsManager(usuario1, usuario2, usuario3);
         return bdUSuarios;
+    }
+
+    @Bean
+    UserDetailsManager getBdUsuarios(@Qualifier("seguridadDataSource") DataSource seguridadDataSource){
+        UserDetails usuarioAlex = User.withDefaultPasswordEncoder().username("alex")
+                .password("tekamachalko")
+                .roles("admin","vtas")
+                .build();
+        UserDetails usuarioDavid = User.withDefaultPasswordEncoder().username("david")
+                .password("tekolutla")
+                .roles("vtas","compras")
+                .build();
+        UserDetails usuarioTavo = User.withDefaultPasswordEncoder().username("tavo")
+                .password("tlatelolko")
+                .roles("compras","cte")
+                .build();
+
+        JdbcUserDetailsManager managerUsuarios = new JdbcUserDetailsManager(seguridadDataSource);
+
+        if(managerUsuarios.userExists(usuarioAlex.getUsername()) == false){
+            managerUsuarios.createUser(usuarioAlex);
+        }
+        if(managerUsuarios.userExists(usuarioDavid.getUsername()) == false){
+            managerUsuarios.createUser(usuarioDavid);
+        }
+        if(managerUsuarios.userExists(usuarioTavo.getUsername()) == false){
+            managerUsuarios.createUser(usuarioTavo);
+        }
+        return managerUsuarios;
     }
 
     @Bean
