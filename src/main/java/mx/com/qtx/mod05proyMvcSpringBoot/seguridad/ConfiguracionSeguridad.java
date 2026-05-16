@@ -1,21 +1,33 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.seguridad;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+
+import java.time.LocalTime;
+import java.util.Objects;
 
 @Configuration
 public class ConfiguracionSeguridad {
 
     private static final Logger log = LoggerFactory.getLogger(ConfiguracionSeguridad.class);
+
+    public static final int HORA_INICIO_DIA_LABORABLE = 9;
+    public static final int HORA_FIN_DIA_LABORABLE = 18;
+    public static final String PREFIJO_IP = "192.168";
 
     //@Bean
     SecurityFilterChain configurarCadenaFiltradoSeguridadMuyBasica(HttpSecurity http){
@@ -25,7 +37,8 @@ public class ConfiguracionSeguridad {
 
         return http.build();
     }
-    @Bean
+
+    // @Bean
     SecurityFilterChain configurarCadenaFiltradoSeguridad(HttpSecurity http){
         http.authorizeHttpRequests( (aut)->aut
                         .requestMatchers("/*.css","/*.png","/index.html","/error*","/","/error/**").permitAll()
@@ -60,4 +73,103 @@ public class ConfiguracionSeguridad {
         InMemoryUserDetailsManager bdUSuarios = new InMemoryUserDetailsManager(usuario1, usuario2, usuario3);
         return bdUSuarios;
     }
+
+    @Bean
+    SecurityFilterChain configurarCadenaFiltradoSeguridad_autorizadorPersonalizado(HttpSecurity http,
+                        AuthorizationManager<RequestAuthorizationContext> autorizadorAdminHorarioLaboralIpInterna){
+
+        http.authorizeHttpRequests( (aut)->aut
+                        .requestMatchers("/*.css","/*.png","/index.html","/error*","/","/error/**").permitAll()
+                        .requestMatchers("/login","/logout").permitAll()
+                        .requestMatchers("/consultarArticulo","/buscarArticulos").hasRole("vtas")
+
+                        .requestMatchers("/insertarArticulo","/procesarInsercionArticulo")
+                                .access(autorizadorAdminHorarioLaboralIpInterna)
+
+                        .requestMatchers("/api/**").hasRole("cte")
+                        .requestMatchers("/**").authenticated()
+                )
+                .csrf(c->c.disable())
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
+
+    @Bean
+    public AuthorizationManager<RequestAuthorizationContext> autorizadorRolAdmin() {
+        AuthorizationManager<RequestAuthorizationContext> autorizador;
+
+        autorizador = (auth, ctx) ->{
+            log.info("autorizadorRolAdmin.verify()");
+            Authentication tknAutenticacion = auth.get();
+            if(tknAutenticacion == null)
+                return new AuthorizationDecision(false);
+
+            log.info("autorizadorRolAdmin.verify Authorities={}",tknAutenticacion.getAuthorities());
+            return new AuthorizationDecision(
+                    tknAutenticacion.getAuthorities()
+                                    .stream()
+                                    .anyMatch(a -> Objects.equals(a.getAuthority(), "ROLE_admin"))
+            );
+        };
+
+        return autorizador;
+    }
+
+    @Bean
+    public AuthorizationManager<RequestAuthorizationContext> autorizadorHorarioLaboral() {
+        return (auth, ctx) -> {
+            log.info("autorizadorHorarioLaboral.verify()");
+            int horaActual = LocalTime.now().getHour();
+            log.info("autorizadorHorarioLaboral.verify horaActual={}",horaActual);
+            return new AuthorizationDecision(esHoraLaborable(horaActual));
+        };
+    }
+
+    @Bean
+    public AuthorizationManager<RequestAuthorizationContext> autorizadorIpInterna() {
+        return (auth, ctx) -> {
+            log.info("autorizadorIpInterna.verify()");
+            String ip = ctx.getRequest().getRemoteAddr();
+            log.info("autorizadorIpInterna.verify ip={}",ip);
+            return new AuthorizationDecision(ip.startsWith(PREFIJO_IP));
+        };
+    }
+
+    @Bean
+    public AuthorizationManager<RequestAuthorizationContext> autorizadorAdminHorarioLaboralIpInterna(
+            AuthorizationManager<RequestAuthorizationContext> autorizadorRolAdmin,
+            AuthorizationManager<RequestAuthorizationContext> autorizadorHorarioLaboral,
+            AuthorizationManager<RequestAuthorizationContext> autorizadorIpInterna) {
+
+        return (auth, ctx) -> {
+            log.info("autorizadorAdminHorarioLaboralIpInterna.verify()");
+            if(autorizadorRolAdmin.authorize(auth, ctx).isGranted())
+                log.info("autorizadorRolAdmin autoriza acceso");
+            else
+                log.warn("autorizadorRolAdmin deniega acceso");
+            if(autorizadorHorarioLaboral.authorize(auth, ctx).isGranted())
+                log.info("autorizadorHorarioLaboral autoriza acceso");
+            else
+                log.warn("autorizadorHorarioLaboral deniega acceso");
+            if(autorizadorIpInterna.authorize(auth, ctx).isGranted())
+                log.info("autorizadorIpInterna autoriza acceso");
+            else
+                log.warn("autorizadorIpInterna deniega acceso");
+
+            boolean granted =
+                    autorizadorRolAdmin.authorize(auth, ctx).isGranted() &&
+                    autorizadorHorarioLaboral.authorize(auth, ctx).isGranted() &&
+                    autorizadorIpInterna.authorize(auth, ctx).isGranted();
+
+            return new AuthorizationDecision(granted);
+        };
+    }
+
+    private static boolean esHoraLaborable(int horaActual) {
+        return horaActual >= HORA_INICIO_DIA_LABORABLE && horaActual <= HORA_FIN_DIA_LABORABLE;
+    }
+
+
 }
