@@ -1,12 +1,12 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.web;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.Articulo;
 import mx.com.qtx.mod05proyMvcSpringBoot.core.IGestorVentas;
 import mx.com.qtx.mod05proyMvcSpringBoot.objetosNegocio.validacion.IGrupoValidacionArticulo;
-import mx.com.qtx.mod05proyMvcSpringBoot.servicios.err.InsercionDuplicadaException;
+import mx.com.qtx.mod05proyMvcSpringBoot.seguridad.UtilWebSecurity;
 import mx.com.qtx.mod05proyMvcSpringBoot.servicios.err.NegocioException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +43,16 @@ public class VentasController {
     @GetMapping("/insertarArticulo")
     public String irAinsercionArticulo(Model modelo){
         log.info("irAinsercionArticulo()");
+        this.reportarUsuario("Intento Insercion Articulo");
         Articulo art = getArticuloVacio();
         modelo.addAttribute("articulo",art);
 //        modelo.addAttribute("categoriasMap", this.gestorVtas.recuperarMapCategoriasAlf());
         return "updateArticulo";
+    }
+
+    private void reportarUsuario(String operacion) {
+        String nomUsuarioConRoles = UtilWebSecurity.getPrincipalConRoles();
+        log.warn("Operacion:{}, Principal:{}",operacion, nomUsuarioConRoles);
     }
 
     @PostMapping("/procesarInsercionArticulo")
@@ -155,4 +161,5 @@ public class VentasController {
         artVacio.setCostoProv1(0);
         return artVacio;
     }
+
 }
