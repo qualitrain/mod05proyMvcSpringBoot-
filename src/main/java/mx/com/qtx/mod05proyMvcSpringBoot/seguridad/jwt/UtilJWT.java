@@ -1,4 +1,4 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.seguridad;
+package mx.com.qtx.mod05proyMvcSpringBoot.seguridad.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

@@ -1,4 +1,4 @@
-package mx.com.qtx.mod05proyMvcSpringBoot.seguridad;
+package mx.com.qtx.mod05proyMvcSpringBoot.seguridad.jwt;
 
 import java.security.Key;
 import java.util.Date;
@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
+import mx.com.qtx.mod05proyMvcSpringBoot.seguridad.servicios.IGeneradorTokensJWT;
 import org.slf4j.Logger;
 import java.util.Map;
 
@@ -16,9 +17,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-//@Component
-public class TokensJwtUtil {
+@Component
+public class TokensJwtUtil implements IGeneradorTokensJWT {
     private static final Logger log = LoggerFactory.getLogger(TokensJwtUtil.class);
 
     private static final String ISSUER = "mx.com.qtx";
@@ -126,22 +128,26 @@ public class TokensJwtUtil {
         return (String) claims.get(llaveCampo);
     }
 
+    @Override
     public String generarToken(String nombreUsuario) {
         return generarToken(nombreUsuario, EXPIRATION_TIME);
     }
 
-     public String generarToken(String nombreUsuario, Map<String, Object> mapClaims) {
+    @Override
+    public String generarToken(String nombreUsuario, Map<String, Object> mapClaims) {
         return generarToken(nombreUsuario, mapClaims, EXPIRATION_TIME);
     }
 
-     public String generarToken(String nombreUsuario, Map<String, Object> mapClaims, long milisDuracion) {
+    @Override
+    public String generarToken(String nombreUsuario, Map<String, Object> mapClaims, long milisDuracion) {
         if (mapClaims == null) {
             mapClaims = new HashMap<>();
         }
         return getTokenConClaims(nombreUsuario, mapClaims, getLlave(), milisDuracion);
     }
 
-     public String extraerUsuario(String token) {
+    @Override
+    public String extraerUsuario(String token) {
         try {
             return extraerUsuarioTokenFirmado(token, getLlave());
         } catch (Exception e) {
@@ -149,7 +155,8 @@ public class TokensJwtUtil {
         }
     }
 
-     public boolean tokenExpirado(String token) {
+    @Override
+    public boolean tokenExpirado(String token) {
         try {
             Date expiracion = extraerExpiracionTokenFirmado(token, llave);
             return expiracion.before(new Date());
@@ -160,6 +167,7 @@ public class TokensJwtUtil {
         }
     }
 
+    @Override
     public boolean tokenValido(String tokenFirmado, String nombreUsuario) {
         try {
             String usuario = extraerUsuarioTokenFirmado(tokenFirmado, llave);
@@ -169,7 +177,8 @@ public class TokensJwtUtil {
         }
     }
 
-     public String getLlaveBase64() {
+    @Override
+    public String getLlaveBase64() {
         return java.util.Base64.getEncoder().encodeToString(llave.getEncoded());
     }
 
