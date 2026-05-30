@@ -228,7 +228,7 @@ public class ConfiguracionSeguridad {
                         .requestMatchers("/**").authenticated()
                 )
                 .csrf(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
+                .formLogin(c->c.loginPage("/login"));
 
         return http.build();
     }
