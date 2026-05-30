@@ -9,12 +9,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -162,7 +165,7 @@ public class ConfiguracionSeguridad {
         return managerUsuarios;
     }
 
-    @Bean
+    //@Bean
     SecurityFilterChain configurarCadenaFiltradoSeguridad_autorizadorPersonalizado(HttpSecurity http,
                         AuthorizationManager<RequestAuthorizationContext> autorizadorAdminHorarioLaboralIpInterna,
                         FiltroTokensJwt_SS filtroJWT){
@@ -185,6 +188,48 @@ public class ConfiguracionSeguridad {
 
         return http.build();
     }
+
+    @Bean
+    @Order(1)
+    SecurityFilterChain configurarCadenaFiltradoSeguridad_ApiWeb(HttpSecurity http,
+                                                                 FiltroTokensJwt_SS filtroJWT){
+
+        http.securityMatchers(config-> config.requestMatchers("/api/**"))
+                .authorizeHttpRequests( (aut)->aut
+                         .requestMatchers("/api/autenticar").permitAll()
+                        .requestMatchers("/api/**").hasRole("cte")
+                )
+                .csrf(c->c.disable())
+                .addFilterBefore(filtroJWT, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(Customizer.withDefaults())
+                .formLogin(c->c.disable())
+                .logout(c->c.disable())
+                .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    SecurityFilterChain configurarCadenaFiltradoSeguridad_interactiva(HttpSecurity http,
+                                                                      AuthorizationManager<RequestAuthorizationContext> autorizadorAdminHorarioLaboralIpInterna){
+
+        http.securityMatchers(config-> config.requestMatchers("/**"))
+                .authorizeHttpRequests( (aut)->aut
+                        .requestMatchers("/*.css","/*.png","/index.html","/error*","/","/error/**").permitAll()
+                        .requestMatchers("/login","/logout").permitAll()
+                        .requestMatchers("/consultarArticulo","/buscarArticulos").hasRole("vtas")
+
+                        .requestMatchers("/insertarArticulo","/procesarInsercionArticulo")
+                        .access(autorizadorAdminHorarioLaboralIpInterna)
+                        .requestMatchers("/**").authenticated()
+                )
+                .csrf(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
+
+        return http.build();
+    }
+
 
     @Bean
     public AuthorizationManager<RequestAuthorizationContext> autorizadorRolAdmin() {

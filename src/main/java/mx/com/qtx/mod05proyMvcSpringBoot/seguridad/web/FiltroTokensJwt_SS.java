@@ -87,6 +87,7 @@ public class FiltroTokensJwt_SS extends OncePerRequestFilter {
         return PETICION_AUTENTICADA_OK;
     }
 
+    @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         if (request.getServletPath().equals("/api/autenticar")) {
             return true;
