@@ -1,5 +1,6 @@
 package mx.com.qtx.mod05proyMvcSpringBoot.seguridad;
 
+import mx.com.qtx.mod05proyMvcSpringBoot.seguridad.web.FiltroTokensJwt_SS;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 import java.time.LocalTime;
@@ -162,11 +164,12 @@ public class ConfiguracionSeguridad {
 
     @Bean
     SecurityFilterChain configurarCadenaFiltradoSeguridad_autorizadorPersonalizado(HttpSecurity http,
-                        AuthorizationManager<RequestAuthorizationContext> autorizadorAdminHorarioLaboralIpInterna){
+                        AuthorizationManager<RequestAuthorizationContext> autorizadorAdminHorarioLaboralIpInterna,
+                        FiltroTokensJwt_SS filtroJWT){
 
         http.authorizeHttpRequests( (aut)->aut
                         .requestMatchers("/*.css","/*.png","/index.html","/error*","/","/error/**").permitAll()
-                        .requestMatchers("/login","/logout","/autenticar").permitAll()
+                        .requestMatchers("/login","/logout","/api/autenticar").permitAll()
                         .requestMatchers("/consultarArticulo","/buscarArticulos").hasRole("vtas")
 
                         .requestMatchers("/insertarArticulo","/procesarInsercionArticulo")
@@ -176,6 +179,7 @@ public class ConfiguracionSeguridad {
                         .requestMatchers("/**").authenticated()
                 )
                 .csrf(c->c.disable())
+                .addFilterBefore(filtroJWT, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults());
 

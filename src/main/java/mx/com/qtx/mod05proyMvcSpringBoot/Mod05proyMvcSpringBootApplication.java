@@ -9,17 +9,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.FixedLocaleResolver;
 
 import javax.sql.DataSource;
 import java.util.Locale;
 
-@SpringBootApplication
+    @SpringBootApplication
     public class Mod05proyMvcSpringBootApplication {
 
     private static Logger log = LoggerFactory.getLogger(Mod05proyMvcSpringBootApplication.class);

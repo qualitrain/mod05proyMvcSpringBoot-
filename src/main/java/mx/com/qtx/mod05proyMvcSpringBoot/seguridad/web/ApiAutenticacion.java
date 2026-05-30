@@ -21,7 +21,7 @@ public class ApiAutenticacion {
         this.servicioAutenticacion = servicioAutenticacion;
     }
 
-    @PostMapping(value="/autenticar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/api/autenticar", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> autenticar(@RequestBody Autenticacion objAutenticacion){
         log.info("ApiAutenticacion.autenticar({})", objAutenticacion.toString());
         IResultadoOperacion resultado = this.servicioAutenticacion.registrarAutenticacion(objAutenticacion);
