@@ -8,9 +8,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -40,6 +42,11 @@ public class ConfiguracionSeguridad {
     @ConfigurationProperties("spring.datasource.security")
     public DataSourceProperties seguridadProperties() {
         return new DataSourceProperties();
+    }
+
+    @Bean
+    public AuthenticationManager publicarAutenticador(AuthenticationConfiguration configAutenticacion){
+        return configAutenticacion.getAuthenticationManager();
     }
 
     @Bean
@@ -159,7 +166,7 @@ public class ConfiguracionSeguridad {
 
         http.authorizeHttpRequests( (aut)->aut
                         .requestMatchers("/*.css","/*.png","/index.html","/error*","/","/error/**").permitAll()
-                        .requestMatchers("/login","/logout").permitAll()
+                        .requestMatchers("/login","/logout","/autenticar").permitAll()
                         .requestMatchers("/consultarArticulo","/buscarArticulos").hasRole("vtas")
 
                         .requestMatchers("/insertarArticulo","/procesarInsercionArticulo")
