@@ -26,6 +26,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -192,7 +193,8 @@ public class ConfiguracionSeguridad {
     @Bean
     @Order(1)
     SecurityFilterChain configurarCadenaFiltradoSeguridad_ApiWeb(HttpSecurity http,
-                                                                 FiltroTokensJwt_SS filtroJWT){
+                                                                 FiltroTokensJwt_SS filtroJWT,
+                                                                 AccessDeniedHandler manejadorRechazosAutorizacion){
 
         http.securityMatchers(config-> config.requestMatchers("/api/**"))
                 .authorizeHttpRequests( (aut)->aut
@@ -204,6 +206,7 @@ public class ConfiguracionSeguridad {
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(c->c.disable())
                 .logout(c->c.disable())
+                .exceptionHandling(c->c.accessDeniedHandler(manejadorRechazosAutorizacion))
                 .sessionManagement(c->c.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
